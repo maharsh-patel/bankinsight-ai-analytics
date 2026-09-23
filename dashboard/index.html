@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BankInsight AI — Bank Marketing Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+/* ── Reset & tokens ────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f1f5f9;--surface:#ffffff;--surface2:#f8fafc;
+  --border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+  --blue:#2563eb;--blue-lt:#dbeafe;--amber:#f59e0b;
+  --green:#16a34a;--green-lt:#dcfce7;--red:#dc2626;--red-lt:#fee2e2;
+  --purple:#7c3aed;--purple-lt:#ede9fe;
+  --radius:10px;--shadow:0 1px 4px rgba(0,0,0,.08);
+  --nav-w:220px;--header-h:56px;
+}
+html{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:14px;
+     color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ── Layout ────────────────────────────────────────────── */
+#app{display:flex;min-height:100vh}
+#sidebar{
+  width:var(--nav-w);min-height:100vh;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0;
+}
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+#topbar{
+  height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;
+}
+#content{flex:1;overflow-y:auto;padding:20px}
+
+/* ── Sidebar ────────────────────────────────────────────── */
+.brand{padding:16px 18px;border-bottom:1px solid var(--border)}
+.brand h1{font-size:15px;font-weight:700;color:var(--blue);line-height:1.2}
+.brand p{font-size:11px;color:var(--muted);margin-top:2px}
+nav{flex:1;padding:8px 0}
+.nav-section{font-size:10px;font-weight:600;color:var(--muted);
+             text-transform:uppercase;letter-spacing:.6px;
+             padding:10px 18px 4px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 18px;
+  cursor:pointer;border-left:3px solid transparent;
+  font-size:13px;color:var(--muted);transition:all .15s;
+}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{
+  background:var(--blue-lt);color:var(--blue);
+  border-left-color:var(--blue);font-weight:600;
+}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.sidebar-footer{padding:14px 18px;border-top:1px solid var(--border);
+                font-size:11px;color:var(--muted)}
+
+/* ── Topbar ─────────────────────────────────────────────── */
+.page-title{font-size:15px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.filter-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-group label{font-size:11px;color:var(--muted);font-weight:500}
+.filter-group select{
+  font-size:12px;padding:5px 8px;border:1px solid var(--border);
+  border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer;
+}
+.filter-note{font-size:11px;color:var(--muted);font-style:italic}
+#loading-bar{
+  height:3px;background:var(--blue);width:0;
+  transition:width .4s ease;position:fixed;top:0;left:0;z-index:999;
+}
+
+/* ── Skeleton loader ─────────────────────────────────────── */
+#content-skeleton{padding:20px}
+.sk-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sk-card{height:90px;background:var(--surface);border-radius:var(--radius);
+         border:1px solid var(--border);overflow:hidden;position:relative}
+.sk-bar{height:280px;background:var(--surface);border-radius:var(--radius);
+        border:1px solid var(--border);overflow:hidden;position:relative}
+.sk-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.sk-card::after,.sk-bar::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.6) 50%,transparent 100%);
+  animation:shimmer 1.4s infinite;
+}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* ── Sections ───────────────────────────────────────────── */
+.section{display:none}
+.section.active{display:block}
+
+/* ── KPI tiles ──────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;box-shadow:var(--shadow);
+}
+.kpi-card .kpi-label{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:6px;
+                     text-transform:uppercase;letter-spacing:.3px}
+.kpi-card .kpi-val{font-size:24px;font-weight:700;line-height:1;color:var(--text)}
+.kpi-card .kpi-sub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+.kpi-card.accent .kpi-val{color:var(--blue)}
+.kpi-card.success .kpi-val{color:var(--green)}
+.kpi-card.warn .kpi-val{color:var(--amber)}
+
+/* ── Cards / chart containers ───────────────────────────── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+.card h3{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.card .card-sub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.chart{width:100%;height:320px}
+.chart-lg{width:100%;height:380px}
+.chart-sm{width:100%;height:300px}
+
+/* ── Table ───────────────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--surface2);font-weight:600;padding:8px 10px;
+   text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--surface2)}
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:20px;
+  font-size:11px;font-weight:600;
+}
+.badge-high{background:var(--green-lt);color:var(--green)}
+.badge-avg {background:var(--blue-lt); color:var(--blue)}
+.badge-low {background:var(--red-lt);  color:var(--red)}
+
+/* ── Model cards ─────────────────────────────────────────── */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.model-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);
+}
+.model-card h4{font-size:13px;font-weight:700;margin-bottom:10px}
+.metric-row{display:flex;justify-content:space-between;padding:4px 0;
+            border-bottom:1px solid var(--border);font-size:12px}
+.metric-row:last-child{border-bottom:none}
+.metric-row .val{font-weight:700;color:var(--blue)}
+.model-card.best-model{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-lt)}
+
+/* ── Insight cards ───────────────────────────────────────── */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.insight-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
+}
+.insight-tag{font-size:10px;font-weight:600;text-transform:uppercase;
+             letter-spacing:.5px;color:var(--blue);margin-bottom:6px}
+.insight-card h4{font-size:13px;font-weight:700;margin-bottom:8px;line-height:1.35}
+.insight-card p{font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:8px}
+.insight-evidence{font-size:11px;color:var(--muted);background:var(--surface2);
+                  padding:4px 8px;border-radius:4px;margin-bottom:8px}
+.insight-action{
+  font-size:12px;background:var(--blue-lt);color:var(--blue);
+  padding:6px 10px;border-radius:6px;font-weight:500;
+}
+
+/* ── Confusion matrix ────────────────────────────────────── */
+.cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;
+         max-width:220px;margin:0 auto}
+.cm-cell{
+  padding:14px;text-align:center;border-radius:6px;
+  font-size:13px;font-weight:700;
+}
+.cm-tn{background:#f0fdf4;color:var(--green)}
+.cm-fp{background:#fef2f2;color:var(--red)}
+.cm-fn{background:#fef2f2;color:var(--red)}
+.cm-tp{background:#eff6ff;color:var(--blue)}
+.cm-label{font-size:10px;font-weight:400;display:block;margin-bottom:4px;opacity:.7}
+.cm-val{font-size:18px}
+
+/* ── Progress bars ───────────────────────────────────────── */
+.prog-bar-wrap{margin:8px 0}
+.prog-bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.prog-bar-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
+
+/* ── Alert / empty state ─────────────────────────────────── */
+.alert{padding:12px 16px;border-radius:8px;font-size:12px;margin-bottom:14px}
+.alert-warn{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.alert-error{background:var(--red-lt);color:var(--red);border:1px solid #fca5a5}
+.empty-state{
+  text-align:center;padding:40px 20px;color:var(--muted);
+}
+.empty-state .icon{font-size:36px;margin-bottom:10px}
+
+/* ── Filter tag ──────────────────────────────────────────── */
+.active-filter{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--blue-lt);color:var(--blue);
+  font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;
+}
+
+@media(max-width:700px){
+  #sidebar{display:none}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+/* ── AI Chat ─────────────────────────────────────────────── */
+.ai-chip{
+  padding:5px 11px;border-radius:20px;border:1px solid var(--blue);
+  background:var(--blue-lt);color:var(--blue);font-size:12px;cursor:pointer;
+  font-weight:500;transition:background .15s;
+}
+.ai-chip:hover{background:var(--blue);color:#fff}
+.ai-msg{padding:10px 12px;border-radius:8px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.ai-msg-user{background:var(--blue);color:#fff;margin-left:40px}
+.ai-msg-ai{background:var(--surface);border:1px solid var(--border);margin-right:40px;white-space:pre-wrap}
+.ai-msg-fallback{background:#fef3c7;border:1px solid #fcd34d;margin-right:40px;white-space:pre-wrap}
+.ai-msg-err{background:var(--red-lt);border:1px solid #fca5a5;margin-right:40px}
+.ai-msg .ai-src{font-size:10px;opacity:.6;margin-top:4px}
+.ai-thinking{color:var(--muted);font-size:12px;padding:8px;font-style:italic}
+</style>
+</head>
+<body>
+<noscript>
+  <div style="padding:40px;text-align:center;font-family:sans-serif">
+    <strong>JavaScript is required to run BankInsight AI.</strong><br>
+    Please enable JavaScript in your browser and reload the page.
+  </div>
+</noscript>
+<div id="loading-bar"></div>
+<div id="app">
+
+<!-- ════════════════════ SIDEBAR ════════════════════ -->
+<aside id="sidebar">
+  <div class="brand">
+    <h1>BankInsight AI</h1>
+    <p>Bank Marketing Analytics</p>
+  </div>
+  <nav>
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item active" data-section="overview"     onclick="showSection('overview')">
+      <span class="nav-icon">📊</span> Executive Overview
+    </div>
+    <div class="nav-item" data-section="customers"    onclick="showSection('customers')">
+      <span class="nav-icon">👥</span> Customer Analytics
+    </div>
+    <div class="nav-item" data-section="campaigns"    onclick="showSection('campaigns')">
+      <span class="nav-icon">📞</span> Campaign Analytics
+    </div>
+    <div class="nav-item" data-section="conversion"   onclick="showSection('conversion')">
+      <span class="nav-icon">🎯</span> Conversion Analysis
+    </div>
+    <div class="nav-section">Machine Learning</div>
+    <div class="nav-item" data-section="ml"           onclick="showSection('ml')">
+      <span class="nav-icon">🤖</span> ML Prediction
+    </div>
+    <div class="nav-item" data-section="explainability" onclick="showSection('explainability')">
+      <span class="nav-icon">🔍</span> Model Explainability
+    </div>
+    <div class="nav-section">Intelligence</div>
+    <div class="nav-item" data-section="insights"     onclick="showSection('insights')">
+      <span class="nav-icon">💡</span> AI Insights
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    UCI Bank Marketing Dataset<br>41,172 campaign contacts
+  </div>
+</aside>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<div id="main">
+  <div id="topbar">
+    <div class="page-title" id="page-title">Executive Overview</div>
+    <div class="filter-group" id="filter-controls">
+      <label>Channel</label>
+      <select id="flt-contact" onchange="applyFilters()">
+        <option value="all">All channels</option>
+        <option value="cellular">Cellular</option>
+        <option value="telephone">Telephone</option>
+      </select>
+      <label>Prior outcome</label>
+      <select id="flt-poutcome" onchange="applyFilters()">
+        <option value="all">All outcomes</option>
+        <option value="success">Prior success</option>
+        <option value="failure">Prior failure</option>
+        <option value="nonexistent">No prior contact</option>
+      </select>
+      <span class="filter-note" id="filter-scope-note">Affects Overview KPIs</span>
+    </div>
+    <span id="filter-tag" style="display:none" class="active-filter"></span>
+  </div>
+  <!-- Skeleton loader shown before data arrives -->
+  <div id="content-skeleton">
+    <div class="sk-row">
+      <div class="sk-card"></div><div class="sk-card"></div>
+      <div class="sk-card"></div><div class="sk-card"></div>
+    </div>
+    <div class="sk-2">
+      <div class="sk-bar"></div><div class="sk-bar"></div>
+    </div>
+    <div class="sk-2">
+      <div class="sk-bar"></div><div class="sk-bar"></div>
+    </div>
+  </div>
+  <div id="content" style="display:none">
+
+    <!-- ──────────────── SECTION 1: OVERVIEW ──────────────── -->
+    <div id="section-overview" class="section active">
+
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Subscription Outcome Distribution</h3>
+          <div class="card-sub">Overall campaign result across all 41,172 clients</div>
+          <div class="chart" id="chart-donut"></div>
+        </div>
+        <div class="card">
+          <h3>Conversion Rate by Previous Campaign Outcome</h3>
+          <div class="card-sub">Prior engagement predicts current subscription</div>
+          <div class="chart" id="chart-poutcome-overview"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Call Volume vs Conversion Rate by Month</h3>
+          <div class="card-sub">High volume ≠ high conversion</div>
+          <div class="chart" id="chart-month-overview"></div>
+        </div>
+        <div class="card">
+          <h3>Conversion Rate by Contact Method</h3>
+          <div class="card-sub">Cellular outperforms telephone by 2.8×</div>
+          <div class="chart" id="chart-contact-overview"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 2: CUSTOMERS ──────────────── -->
+    <div id="section-customers" class="section">
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Conversion Rate by Job Type</h3>
+          <div class="card-sub">Ranked from highest to lowest subscription rate</div>
+          <div class="chart-lg" id="chart-job"></div>
+        </div>
+        <div class="card">
+          <h3>Conversion Rate by Education Level</h3>
+          <div class="card-sub">Ordered from lowest to highest education</div>
+          <div class="chart-lg" id="chart-edu"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Conversion Rate by Marital Status</h3>
+          <div class="card-sub">With average age and contact count per group</div>
+          <div class="chart" id="chart-marital"></div>
+        </div>
+        <div class="card">
+          <h3>Housing Loan, Personal Loan & Credit Default</h3>
+          <div class="card-sub">Debt burden impact on subscription likelihood</div>
+          <div class="chart" id="chart-housing"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Job Type Detail Table</h3>
+        <div class="card-sub">Full breakdown with client volume and tier classification</div>
+        <div class="tbl-wrap" id="tbl-job"></div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 3: CAMPAIGNS ──────────────── -->
+    <div id="section-campaigns" class="section">
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Conversion Rate by Number of Campaign Contacts</h3>
+          <div class="card-sub">Returns diminish after the 3rd contact</div>
+          <div class="chart" id="chart-campaign-count"></div>
+        </div>
+        <div class="card">
+          <h3>Campaign Contact Zone Analysis</h3>
+          <div class="card-sub">Proportion of clients per contact zone</div>
+          <div class="chart" id="chart-campaign-zone"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Monthly Campaign Performance</h3>
+          <div class="card-sub">Conversion rate vs call volume by month</div>
+          <div class="chart-lg" id="chart-month"></div>
+        </div>
+        <div class="card">
+          <h3>Conversion Rate by Day of Week</h3>
+          <div class="card-sub">Minimal variation — day is not a major driver</div>
+          <div class="chart" id="chart-dow"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Campaign Contact Count — Full Table</h3>
+        <div class="card-sub">Conversion rate and cumulative reach per contact count</div>
+        <div class="tbl-wrap" id="tbl-campaign"></div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 4: CONVERSION ──────────────── -->
+    <div id="section-conversion" class="section">
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Conversion Rate by Previous Campaign Outcome</h3>
+          <div class="card-sub">Prior success = 65% conversion — strongest predictor</div>
+          <div class="chart" id="chart-poutcome"></div>
+        </div>
+        <div class="card">
+          <h3>Call Duration Bucket vs Conversion Rate</h3>
+          <div class="card-sub">Longer calls strongly correlate with subscription (descriptive only — not used in model)</div>
+          <div class="chart" id="chart-duration-bucket"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Average Call Duration: Subscribed vs Not</h3>
+          <div class="card-sub">Subscribers spend 2.5× longer on calls on average</div>
+          <div class="chart-sm" id="chart-duration-outcome"></div>
+        </div>
+        <div class="card">
+          <h3>Top Customer Segments by Conversion Rate</h3>
+          <div class="card-sub">Age band × job tier × prior contact (min 30 clients)</div>
+          <div class="chart" id="chart-segments"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Top 10 Customer Segments — Detail</h3>
+        <div class="card-sub">Ranked by conversion rate</div>
+        <div class="tbl-wrap" id="tbl-segments"></div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 5: ML PREDICTION ──────────────── -->
+    <div id="section-ml" class="section">
+
+      <div class="alert alert-warn">
+        ⚠ <strong>Leakage note:</strong> The feature <code>duration</code> is intentionally
+        excluded from all models — it is unknown before a call is made.
+        All results below are from real sklearn training on 41,172 records.
+      </div>
+
+      <div class="card">
+        <h3>Problem Definition</h3>
+        <div class="card-sub">Binary classification: will a client subscribe to a term deposit?</div>
+        <div class="grid-3" style="gap:14px;margin-top:8px">
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:6px">Target</div>
+            y_encoded — 0 (no) / 1 (yes)<br>
+            Class balance: 88.7% / 11.3%<br>
+            Imbalance ratio: 7.9:1
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:6px">Features</div>
+            41 numeric columns<br>
+            From Phase 5 feature engineering<br>
+            duration excluded (leakage)
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:6px">Strategy</div>
+            80/20 stratified split<br>
+            5-fold stratified CV<br>
+            class_weight='balanced'
+          </div>
+        </div>
+      </div>
+
+      <div class="model-grid" id="model-cards"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>5-Fold CV — F1 Score Comparison</h3>
+          <div class="card-sub">Mean ± std deviation across folds</div>
+          <div class="chart" id="chart-cv-f1"></div>
+        </div>
+        <div class="card">
+          <h3>5-Fold CV — All Metrics</h3>
+          <div class="card-sub">Random Forest consistently outperforms Logistic Regression</div>
+          <div class="chart" id="chart-cv-multi"></div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>M0 Dummy — Confusion Matrix</h3>
+          <div class="card-sub">Baseline (stratified random)</div>
+          <div class="cm-wrap" id="cm-dummy"></div>
+        </div>
+        <div class="card">
+          <h3>M1 Logistic Regression</h3>
+          <div class="card-sub">class_weight='balanced'</div>
+          <div class="cm-wrap" id="cm-lr"></div>
+        </div>
+        <div class="card">
+          <h3>M2 Random Forest ⭐</h3>
+          <div class="card-sub">Primary model — best F1 and ROC-AUC</div>
+          <div class="cm-wrap" id="cm-rf"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 6: EXPLAINABILITY ──────────────── -->
+    <div id="section-explainability" class="section">
+
+      <div class="card">
+        <h3>What Drives Subscription? — Top Feature Groups</h3>
+        <div class="card-sub">Based on Pearson correlation |r| with subscription target — from BankInsight feature analysis</div>
+
+        <div style="margin:16px 0">
+          <div style="font-weight:600;margin-bottom:10px;font-size:12px">Previous Contact History (strongest signals)</div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>pdays / previously_contacted</span><span>|r| = 0.325</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:100%;background:var(--blue)"></div></div>
+          </div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>repeat_success (interaction flag)</span><span>|r| = 0.316</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:97%;background:var(--blue)"></div></div>
+          </div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>poutcome_success (OHE)</span><span>|r| = 0.316</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:97%;background:var(--blue)"></div></div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0">
+          <div style="font-weight:600;margin-bottom:10px;font-size:12px">Economic Environment</div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>euribor3m (negative: lower rate → higher sub)</span><span>|r| = 0.308</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:95%;background:var(--amber)"></div></div>
+          </div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>low_rate_env (euribor &lt; 2.0 flag)</span><span>|r| = 0.291</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:89%;background:var(--amber)"></div></div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0">
+          <div style="font-weight:600;margin-bottom:10px;font-size:12px">Prior Contact Recency</div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>pdays_actual (days since prior contact)</span><span>|r| = 0.279</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:86%;background:var(--purple)"></div></div>
+          </div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>previous / previous_capped</span><span>|r| = 0.230</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:71%;background:var(--purple)"></div></div>
+          </div>
+        </div>
+
+        <div style="margin:16px 0">
+          <div style="font-weight:600;margin-bottom:10px;font-size:12px">Campaign & Channel</div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>contact_telephone (negative: cellular better)</span><span>|r| = 0.145</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:45%;background:var(--green)"></div></div>
+          </div>
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-label"><span>cellular_first (interaction flag)</span><span>|r| = 0.106</span></div>
+            <div class="prog-bar-track"><div class="prog-bar-fill" style="width:33%;background:var(--green)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Model Limitation Notes</h3>
+          <div class="card-sub">Honest assessment of what the model cannot do</div>
+          <div style="font-size:12px;line-height:1.7;color:var(--muted)">
+            <p style="margin-bottom:8px">
+              <strong style="color:var(--text)">Duration excluded by design.</strong>
+              Duration is the single strongest raw correlate of subscription but is causally
+              <em>after</em> the decision to subscribe — unknown before calling. Including it
+              would inflate model metrics but make the model useless in practice.
+            </p>
+            <p style="margin-bottom:8px">
+              <strong style="color:var(--text)">Temporal data — not a random sample.</strong>
+              The dataset reflects 2008–2013 Portuguese bank campaigns during the post-crisis
+              period. Macro conditions (low Euribor, high unemployment variation) drove
+              significant subscription behaviour. The model may underperform in different
+              economic climates.
+            </p>
+            <p style="margin-bottom:8px">
+              <strong style="color:var(--text)">Threshold not tuned.</strong>
+              The default 0.5 probability threshold was used. Moving the threshold to ~0.3
+              would increase recall (fewer missed subscribers) at the cost of lower precision
+              (more wasted calls). This tradeoff should be tuned to campaign economics.
+            </p>
+            <p>
+              <strong style="color:var(--text)">Class imbalance.</strong>
+              The 8:1 imbalance was handled via class_weight='balanced'. PR-AUC
+              (0.478 vs 0.113 baseline) confirms the model is genuinely predictive,
+              not just predicting the majority class.
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Random Forest vs Logistic Regression</h3>
+          <div class="card-sub">Why RF is the primary model</div>
+          <div class="chart-sm" id="chart-model-compare"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ──────────────── SECTION 7: AI INSIGHTS ──────────────── -->
+    <div id="section-insights" class="section">
+      <div style="margin-bottom:14px;font-size:13px;color:var(--muted)">
+        All insights are derived from validated analytical results — EDA findings,
+        SQL aggregations, and ML model evaluation. No fabricated data.
+      </div>
+      <div class="insight-grid" id="insight-grid"></div>
+
+      <!-- AI Chat Panel -->
+      <div class="card" style="margin-top:20px" id="ai-chat-card">
+        <h3>Ask BankInsight AI</h3>
+        <div class="card-sub" id="ai-status-line">
+          Checking AI availability...
+        </div>
+
+        <!-- Suggested questions -->
+        <div style="margin:10px 0 14px;display:flex;flex-wrap:wrap;gap:6px" id="ai-suggestions">
+          <button class="ai-chip" onclick="askAI('Which customer groups had higher conversion rates?')">Which customer groups convert best?</button>
+          <button class="ai-chip" onclick="askAI('What campaign characteristics are associated with better outcomes?')">Best campaign characteristics?</button>
+          <button class="ai-chip" onclick="askAI('What are the major findings from the analysis?')">Major findings?</button>
+          <button class="ai-chip" onclick="askAI('What should a marketing manager investigate?')">Manager priorities?</button>
+          <button class="ai-chip" onclick="askAI('How did the Random Forest model perform?')">Model performance?</button>
+          <button class="ai-chip" onclick="askAI('What factors are most predictive of term deposit subscription?')">Top predictors?</button>
+          <button class="ai-chip" onclick="askAI('Which months are best for campaigns?')">Best months?</button>
+        </div>
+
+        <!-- Chat history -->
+        <div id="ai-chat-history" style="
+          max-height:420px;overflow-y:auto;padding:8px;
+          background:var(--surface2);border-radius:8px;border:1px solid var(--border);
+          margin-bottom:10px;min-height:100px;
+        ">
+          <div id="ai-empty-state" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">
+            Select a suggested question above or type your own to get started.
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div style="display:flex;gap:8px">
+          <input id="ai-input" type="text"
+            placeholder="Ask a question about the analysis..."
+            style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:8px;
+                   font-size:13px;outline:none;"
+            onkeydown="if(event.key==='Enter')sendAI()"
+          />
+          <button onclick="sendAI()" id="ai-send-btn"
+            style="padding:9px 18px;background:var(--blue);color:#fff;border:none;
+                   border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;
+                   white-space:nowrap">
+            Ask
+          </button>
+        </div>
+
+        <div style="margin-top:8px;font-size:11px;color:var(--muted)">
+          AI responses are grounded in validated project data only. Numbers cited are from actual analysis results.
+          When AI API is unavailable, rule-based fallback answers are used.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DATA LOADING
+// ════════════════════════════════════════════════════════════════
+let D = null;  // global data
+
+function showLoading(pct) {
+  document.getElementById('loading-bar').style.width = pct + '%';
+}
+
+async function loadData() {
+  showLoading(20);
+  try {
+    const resp = await fetch('dashboard_data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status + ' — dashboard_data.json not found');
+    D = await resp.json();
+    if (!D.kpis || !D.by_job) throw new Error('dashboard_data.json is incomplete or corrupt');
+    showLoading(80);
+    initDashboard();
+    // Hide skeleton, reveal content
+    const skel = document.getElementById('content-skeleton');
+    const cont = document.getElementById('content');
+    if (skel) skel.style.display = 'none';
+    if (cont) cont.style.display = 'block';
+    showLoading(100);
+    setTimeout(() => { document.getElementById('loading-bar').style.width = '0'; }, 600);
+  } catch(e) {
+    showLoading(0);
+    const skel = document.getElementById('content-skeleton');
+    if (skel) skel.style.display = 'none';
+    const cont = document.getElementById('content');
+    if (cont) {
+      cont.style.display = 'block';
+      cont.innerHTML =
+        '<div style="padding:20px"><div class="alert alert-error">' +
+        '<strong>Failed to load dashboard data</strong><br>' + e.message +
+        '<br><br><small>Steps to fix:<br>' +
+        '1. Run: <code>python src/phase7_dashboard_data.py</code><br>' +
+        '2. Serve with: <code>python src/phase8_ai_server.py</code><br>' +
+        '3. Open: <a href="http://localhost:8050">http://localhost:8050</a>' +
+        '</small></div></div>';
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════════
+const TITLES = {
+  overview:'Executive Overview', customers:'Customer Analytics',
+  campaigns:'Campaign Analytics', conversion:'Conversion Analysis',
+  ml:'ML Prediction', explainability:'Model Explainability', insights:'AI Insights'
+};
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelector('[data-section="' + id + '"]').classList.add('active');
+  document.getElementById('page-title').textContent = TITLES[id];
+  // Filters only make sense on Overview — show/hide and update scope note
+  const isOverview = id === 'overview';
+  const fc = document.getElementById('filter-controls');
+  const sn = document.getElementById('filter-scope-note');
+  if (fc) fc.style.opacity = isOverview ? '1' : '0.4';
+  if (sn) sn.textContent = isOverview ? 'Affects Overview KPIs' : 'Filters apply to Overview only';
+  // Resize charts in newly visible section
+  setTimeout(() => {
+    document.querySelectorAll('[id^="chart-"]').forEach(el => {
+      const inst = echarts.getInstanceByDom(el);
+      if (inst) inst.resize();
+    });
+  }, 60);
+}
+
+// ════════════════════════════════════════════════════════════════
+// FILTERS  (applied to overview KPIs only — SQL data is pre-aggregated)
+// ════════════════════════════════════════════════════════════════
+function applyFilters() {
+  const contact  = document.getElementById('flt-contact').value;
+  const poutcome = document.getElementById('flt-poutcome').value;
+  const tag = document.getElementById('filter-tag');
+  const active = contact !== 'all' || poutcome !== 'all';
+  tag.style.display = active ? 'inline-flex' : 'none';
+  if (active) {
+    const parts = [];
+    if (contact  !== 'all') parts.push(contact);
+    if (poutcome !== 'all') parts.push(poutcome);
+    tag.textContent = parts.join(' · ');
+  }
+  renderFilteredKPIs(contact, poutcome);
+}
+
+function renderFilteredKPIs(contact, poutcome) {
+  // Re-compute KPIs from sub-datasets
+  let jobData    = D.by_job;
+  let contactRow = D.by_contact;
+  let pout       = D.by_poutcome;
+
+  // Contact filter: re-derive subset conversion from contact data
+  let total = D.kpis.total_clients;
+  let subs  = D.kpis.total_subscribed;
+
+  if (contact !== 'all') {
+    const row = D.by_contact.find(r => r.contact === contact);
+    if (row) { total = row.total_clients; subs = row.subscribed; }
+  }
+  if (poutcome !== 'all') {
+    const rows = D.by_poutcome.filter(r => r.poutcome === poutcome);
+    if (rows.length) {
+      total = rows.reduce((a,r) => a + r.total_clients, 0);
+      subs  = rows.reduce((a,r) => a + r.subscribed, 0);
+    }
+  }
+  const rate = total > 0 ? (subs / total * 100).toFixed(2) : 0;
+  renderKPIs({...D.kpis,
+    total_clients: total, total_subscribed: subs,
+    total_not_subscribed: total - subs, subscription_rate: parseFloat(rate)
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════════
+function fmt(n, decimals=0) {
+  if (n == null) return '—';
+  return n.toLocaleString('en-US', {minimumFractionDigits:decimals,maximumFractionDigits:decimals});
+}
+function makeChart(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const existing = echarts.getInstanceByDom(el);
+  if (existing) existing.dispose();
+  return echarts.init(el);
+}
+
+const COLORS = ['#2563eb','#f59e0b','#16a34a','#7c3aed','#ef4444','#0891b2','#d97706','#65a30d'];
+const BLUE='#2563eb', GREY='#94a3b8', AMBER='#f59e0b', GREEN='#16a34a';
+
+function tierColor(tier) {
+  if (!tier) return GREY;
+  if (tier.toUpperCase().includes('HIGH')) return GREEN;
+  if (tier.toUpperCase().includes('LOW'))  return '#ef4444';
+  return BLUE;
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ════════════════════════════════════════════════════════════════
+
+function renderKPIs(kpis) {
+  // Derive previously-contacted count from poutcome data
+  const prevContacted = D.by_poutcome
+    .filter(r => r.previously_contacted === 1)
+    .reduce((a,r) => a + r.total_clients, 0);
+  const prevPct = (prevContacted / kpis.total_clients * 100).toFixed(1);
+
+  const grid = document.getElementById('kpi-grid');
+  grid.innerHTML = `
+    <div class="kpi-card accent">
+      <div class="kpi-label">Total Clients</div>
+      <div class="kpi-val">${fmt(kpis.total_clients)}</div>
+      <div class="kpi-sub">campaign contacts</div>
+    </div>
+    <div class="kpi-card success">
+      <div class="kpi-label">Subscribed</div>
+      <div class="kpi-val">${fmt(kpis.total_subscribed)}</div>
+      <div class="kpi-sub">term deposit sign-ups</div>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-label">Conversion Rate</div>
+      <div class="kpi-val">${fmt(kpis.subscription_rate,2)}%</div>
+      <div class="kpi-sub">${fmt(kpis.total_not_subscribed)} not subscribed</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Class Imbalance</div>
+      <div class="kpi-val">${fmt(kpis.imbalance_ratio,1)}:1</div>
+      <div class="kpi-sub">no : yes ratio</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Call Duration</div>
+      <div class="kpi-val">${fmt(kpis.avg_call_duration_sec,0)}s</div>
+      <div class="kpi-sub">${fmt(kpis.avg_call_duration_sec/60,1)} min average</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Campaign Contacts</div>
+      <div class="kpi-val">${fmt(kpis.avg_campaign_contacts,1)}</div>
+      <div class="kpi-sub">per client this campaign</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Previously Contacted</div>
+      <div class="kpi-val">${fmt(prevContacted)}</div>
+      <div class="kpi-sub">${prevPct}% had prior campaign contact</div>
+    </div>
+  `;
+}
+
+function renderDonut() {
+  const c = makeChart('chart-donut');
+  if (!c) return;
+  c.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} ({d}%)'},
+    legend:{bottom:0,itemGap:20},
+    series:[{
+      type:'pie', radius:['48%','72%'],
+      data:[
+        {value:D.kpis.total_subscribed,    name:'Subscribed (yes)',    itemStyle:{color:BLUE}},
+        {value:D.kpis.total_not_subscribed,name:'Not Subscribed (no)', itemStyle:{color:GREY}},
+      ],
+      label:{formatter:'{d}%',fontWeight:'bold'},
+    }]
+  });
+}
+
+function renderPoutcomeOverview() {
+  const c = makeChart('chart-poutcome-overview');
+  if (!c) return;
+  const labels = D.by_poutcome.map(r => r.poutcome + (r.previously_contacted?'\n(prev.contacted)':'\n(new)'));
+  const rates  = D.by_poutcome.map(r => r.conv_rate_pct);
+  const colors = rates.map(v => v > 30 ? BLUE : v > 10 ? AMBER : GREY);
+  c.setOption({
+    tooltip:{trigger:'axis',formatter: p => p[0].name+'<br>Conv: '+p[0].value+'%<br>n='+D.by_poutcome[p[0].dataIndex].total_clients.toLocaleString()},
+    grid:{left:10,right:20,top:10,bottom:60,containLabel:true},
+    xAxis:{type:'category',data:labels,axisLabel:{fontSize:11}},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:80},
+    series:[{type:'bar',data:rates.map((v,i)=>({value:v,itemStyle:{color:colors[i]}})),
+      label:{show:true,position:'top',formatter:'{c}%',fontSize:11,fontWeight:'bold'},
+      barMaxWidth:60
+    }]
+  });
+}
+
+function renderMonthOverview() {
+  const c = makeChart('chart-month-overview');
+  if (!c) return;
+  const months = D.by_temporal.filter(r=>r.time_dimension==='month');
+  const order  = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  const sorted = order.map(m=>months.find(r=>r.period===m)).filter(Boolean);
+  c.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+    legend:{top:0,data:['Call Volume','Conv Rate %']},
+    grid:{left:10,right:40,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:sorted.map(r=>r.period)},
+    yAxis:[
+      {type:'value',name:'Calls',axisLabel:{fontSize:10}},
+      {type:'value',name:'Conv %',axisLabel:{formatter:'{value}%',fontSize:10},
+       min:0,max:60,splitLine:{show:false}}
+    ],
+    series:[
+      {name:'Call Volume',type:'bar',data:sorted.map(r=>r.total_calls),
+       itemStyle:{color:GREY},opacity:0.7},
+      {name:'Conv Rate %',type:'line',yAxisIndex:1,
+       data:sorted.map(r=>r.conv_rate_pct),
+       lineStyle:{color:BLUE,width:2.5},symbol:'circle',symbolSize:6,
+       itemStyle:{color:BLUE},label:{show:true,formatter:'{c}%',fontSize:9,position:'top'}}
+    ]
+  });
+}
+
+function renderContactOverview() {
+  const c = makeChart('chart-contact-overview');
+  if (!c) return;
+  const rows = D.by_contact;
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:20,top:20,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:rows.map(r=>r.contact)},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:25},
+    series:[{
+      type:'bar', barMaxWidth:80,
+      data:rows.map(r=>({value:r.conv_rate_pct,
+        itemStyle:{color:r.contact==='cellular'?BLUE:GREY}})),
+      label:{show:true,position:'top',formatter:'{c}%',fontWeight:'bold',fontSize:13}
+    }]
+  });
+}
+
+function renderJobChart() {
+  const c = makeChart('chart-job');
+  if (!c) return;
+  const rows = [...D.by_job].sort((a,b)=>a.conv_rate_pct-b.conv_rate_pct);
+  c.setOption({
+    tooltip:{trigger:'axis',formatter:p=>p[0].name+'<br>Conv: '+p[0].value+'%'},
+    grid:{left:10,right:80,top:10,bottom:10,containLabel:true},
+    xAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:40},
+    yAxis:{type:'category',data:rows.map(r=>r.job)},
+    series:[{
+      type:'bar',
+      data:rows.map(r=>({value:r.conv_rate_pct,itemStyle:{color:tierColor(r.conversion_tier)}})),
+      label:{show:true,position:'right',formatter:p=>p.value+'%  n='+rows[p.dataIndex].total_clients.toLocaleString(),fontSize:10}
+    }]
+  });
+}
+
+function renderEduChart() {
+  const c = makeChart('chart-edu');
+  if (!c) return;
+  const rows = D.by_education;
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:60,top:10,bottom:10,containLabel:true},
+    xAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:25},
+    yAxis:{type:'category',data:rows.map(r=>r.education)},
+    series:[{
+      type:'bar',
+      data:rows.map(r=>({value:r.conv_rate_pct,
+        itemStyle:{color:r.conv_rate_pct>12?BLUE:r.conv_rate_pct>9?AMBER:GREY}})),
+      label:{show:true,position:'right',formatter:p=>p.value+'%',fontSize:10}
+    }]
+  });
+}
+
+function renderMaritalChart() {
+  const c = makeChart('chart-marital');
+  if (!c) return;
+  const rows = [...D.by_marital].sort((a,b)=>b.conv_rate_pct-a.conv_rate_pct);
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:20,top:10,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:rows.map(r=>r.marital)},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:20},
+    series:[{
+      type:'bar',barMaxWidth:70,
+      data:rows.map(r=>({value:r.conv_rate_pct,
+        itemStyle:{color:r.marital==='single'?BLUE:GREY}})),
+      label:{show:true,position:'top',formatter:'{c}%',fontWeight:'bold'}
+    }]
+  });
+}
+
+function renderHousingChart() {
+  const c = makeChart('chart-housing');
+  if (!c) return;
+  const dims = ['housing','loan','credit_default'];
+  const series = dims.map(dim=>{
+    const rows = D.by_housing_loan.filter(r=>r.dimension===dim)
+                  .sort((a,b)=>b.conv_rate_pct-a.conv_rate_pct);
+    return {name:dim, type:'bar', data:rows.map(r=>r.conv_rate_pct),
+            label:{show:true,position:'top',formatter:'{c}%',fontSize:10}};
+  });
+  const cats = ['yes','no','unknown'];
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{top:0},
+    grid:{left:10,right:10,top:30,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:cats},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:20},
+    series:series.map((s,i)=>({...s,itemStyle:{color:COLORS[i]}}))
+  });
+}
+
+function renderCampaignCount() {
+  const c = makeChart('chart-campaign-count');
+  if (!c) return;
+  const rows = D.by_campaign_count;
+  const colors = rows.map(r=>{
+    if(r.contact_zone==='FIRST CONTACT') return BLUE;
+    if(r.contact_zone==='OPTIMAL ZONE') return GREEN;
+    if(r.contact_zone.includes('DIMINISHING')) return AMBER;
+    return '#ef4444';
+  });
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:20,bottom:30,containLabel:true},
+    xAxis:{type:'category',data:rows.map(r=>r.contact_count),
+           name:'# Contacts',nameLocation:'middle',nameGap:25},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:16},
+    series:[{
+      type:'bar',
+      data:rows.map((r,i)=>({value:r.conv_rate_pct,itemStyle:{color:colors[i]}})),
+      label:{show:true,position:'top',formatter:'{c}%',fontSize:10}
+    }]
+  });
+}
+
+function renderCampaignZone() {
+  const c = makeChart('chart-campaign-zone');
+  if (!c) return;
+  const zoneMap = {};
+  D.by_campaign_count.forEach(r=>{
+    const z = r.contact_zone;
+    zoneMap[z] = (zoneMap[z]||0) + r.total_clients;
+  });
+  const zColors = {'FIRST CONTACT':BLUE,'OPTIMAL ZONE':GREEN,
+    'DIMINISHING RETURNS':AMBER,'OVER-CONTACTED':'#ef4444'};
+  const entries = Object.entries(zoneMap);
+  c.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} ({d}%)'},
+    series:[{
+      type:'pie',radius:'65%',
+      data:entries.map(([z,v])=>({name:z,value:v,itemStyle:{color:zColors[z]||GREY}})),
+      label:{formatter:'{b}\n{d}%',fontSize:11}
+    }]
+  });
+}
+
+function renderMonthChart() {
+  const c = makeChart('chart-month');
+  if (!c) return;
+  const months = D.by_temporal.filter(r=>r.time_dimension==='month');
+  const order  = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  const sorted = order.map(m=>months.find(r=>r.period===m)).filter(Boolean);
+  c.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+    legend:{top:0},
+    grid:{left:10,right:50,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:sorted.map(r=>r.period)},
+    yAxis:[
+      {type:'value',name:'Total Calls'},
+      {type:'value',name:'Conv %',axisLabel:{formatter:'{value}%'},
+       min:0,max:60,splitLine:{show:false}}
+    ],
+    series:[
+      {name:'Total Calls',type:'bar',data:sorted.map(r=>r.total_calls),
+       itemStyle:{color:GREY},opacity:0.7},
+      {name:'Conv Rate %',type:'line',yAxisIndex:1,
+       data:sorted.map(r=>r.conv_rate_pct),
+       lineStyle:{color:BLUE,width:2.5},symbol:'circle',symbolSize:7,
+       itemStyle:{color:BLUE},
+       label:{show:true,formatter:'{c}%',fontSize:9,position:'top'}}
+    ]
+  });
+}
+
+function renderDOWChart() {
+  const c = makeChart('chart-dow');
+  if (!c) return;
+  const rows = D.by_temporal.filter(r=>r.time_dimension==='day_of_week');
+  const order = ['mon','tue','wed','thu','fri'];
+  const sorted = order.map(d=>rows.find(r=>r.period===d)).filter(Boolean);
+  const avg = sorted.reduce((a,r)=>a+r.conv_rate_pct,0)/sorted.length;
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:20,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:sorted.map(r=>r.period.toUpperCase())},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},min:8,max:14},
+    series:[
+      {type:'bar',barMaxWidth:60,
+       data:sorted.map(r=>({value:r.conv_rate_pct,
+         itemStyle:{color:r.conv_rate_pct>=avg?BLUE:GREY}})),
+       label:{show:true,position:'top',formatter:'{c}%',fontWeight:'bold'}},
+      {type:'line',data:sorted.map(()=>avg),
+       lineStyle:{color:AMBER,type:'dashed',width:1.5},
+       symbol:'none',tooltip:{show:false}}
+    ]
+  });
+}
+
+function renderPoutcome() {
+  const c = makeChart('chart-poutcome');
+  if (!c) return;
+  const rows = [...D.by_poutcome].sort((a,b)=>b.conv_rate_pct-a.conv_rate_pct);
+  const labels = rows.map(r=>r.poutcome+(r.previously_contacted?' (prev)':' (new)'));
+  c.setOption({
+    tooltip:{trigger:'axis',formatter:p=>{
+      const r=rows[p[0].dataIndex];
+      return labels[p[0].dataIndex]+'<br>Conv: '+r.conv_rate_pct+'%<br>n='+r.total_clients.toLocaleString();
+    }},
+    grid:{left:10,right:20,bottom:50,containLabel:true},
+    xAxis:{type:'category',data:labels,axisLabel:{rotate:15,fontSize:10}},
+    yAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:80},
+    series:[{
+      type:'bar',barMaxWidth:70,
+      data:rows.map(r=>({value:r.conv_rate_pct,
+        itemStyle:{color:r.conv_rate_pct>50?BLUE:r.conv_rate_pct>10?AMBER:GREY}})),
+      label:{show:true,position:'top',formatter:'{c}%',fontWeight:'bold'}
+    }]
+  });
+}
+
+function renderDurationBucket() {
+  const c = makeChart('chart-duration-bucket');
+  if (!c) return;
+  const rows = D.by_duration_bucket;
+  c.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'}},
+    legend:{top:0},
+    grid:{left:10,right:50,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:rows.map(r=>r.duration_bucket)},
+    yAxis:[
+      {type:'value',name:'Clients',axisLabel:{fontSize:10}},
+      {type:'value',name:'Conv %',axisLabel:{formatter:'{value}%',fontSize:10},
+       min:0,max:60,splitLine:{show:false}}
+    ],
+    series:[
+      {name:'Clients',type:'bar',data:rows.map(r=>r.total_clients),
+       itemStyle:{color:GREY},opacity:0.6},
+      {name:'Conv Rate %',type:'line',yAxisIndex:1,
+       data:rows.map(r=>r.conv_rate_pct),
+       lineStyle:{color:BLUE,width:2.5},symbol:'circle',symbolSize:7,
+       itemStyle:{color:BLUE},label:{show:true,formatter:'{c}%',fontSize:10,position:'top'}}
+    ]
+  });
+}
+
+function renderDurationOutcome() {
+  const c = makeChart('chart-duration-outcome');
+  if (!c) return;
+  const rows = D.by_duration_outcome;
+  c.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:10,right:20,bottom:20,containLabel:true},
+    xAxis:{type:'category',data:rows.map(r=>r.outcome==='yes'?'Subscribed':'Not Subscribed')},
+    yAxis:{type:'value',name:'Avg Duration (sec)'},
+    series:[{
+      type:'bar',barMaxWidth:100,
+      data:rows.map(r=>({value:r.avg_duration_sec,
+        itemStyle:{color:r.outcome==='yes'?BLUE:GREY}})),
+      label:{show:true,position:'top',formatter:p=>p.value+'s\n('+Math.round(p.value/60*10)/10+' min)',
+             fontWeight:'bold',fontSize:11}
+    }]
+  });
+}
+
+function renderSegments() {
+  const c = makeChart('chart-segments');
+  if (!c) return;
+  const rows = D.segments.slice(0,10);
+  const labels = rows.map(r=>r.age_band+' / '+r.job_tier.replace('_VALUE','')+
+                             (r.previously_contacted?' ✓':''));
+  c.setOption({
+    tooltip:{trigger:'axis',formatter:p=>{
+      const r=rows[p[0].dataIndex];
+      return labels[p[0].dataIndex]+'<br>Conv: '+r.conv_rate_pct+'%<br>n='+r.clients;
+    }},
+    grid:{left:10,right:80,top:10,bottom:10,containLabel:true},
+    xAxis:{type:'value',axisLabel:{formatter:'{value}%'},max:100},
+    yAxis:{type:'category',data:labels},
+    series:[{
+      type:'bar',
+      data:rows.map(r=>({value:r.conv_rate_pct,
+        itemStyle:{color:r.conv_rate_pct>60?BLUE:r.conv_rate_pct>40?AMBER:GREY}})),
+      label:{show:true,position:'right',formatter:p=>p.value+'%',fontSize:10}
+    }]
+  });
+}
+
+function renderJobTable() {
+  const rows = D.by_job;
+  let html = '<table><thead><tr><th>#</th><th>Job</th><th>Clients</th><th>Subscribed</th><th>Conv Rate</th><th>% of Dataset</th><th>Tier</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    const badge = `<span class="badge badge-${r.conversion_tier.toLowerCase().includes('high')?'high':r.conversion_tier.toLowerCase().includes('low')?'low':'avg'}">${r.conversion_tier}</span>`;
+    html += `<tr><td>${r.rank_by_conv}</td><td><strong>${r.job}</strong></td><td>${r.total_clients.toLocaleString()}</td><td>${r.subscribed.toLocaleString()}</td><td><strong>${r.conv_rate_pct}%</strong></td><td>${r.pct_of_dataset}%</td><td>${badge}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('tbl-job').innerHTML = html;
+}
+
+function renderCampaignTable() {
+  const rows = D.by_campaign_count;
+  const zoneColors = {'FIRST CONTACT':'badge-high','OPTIMAL ZONE':'badge-avg','DIMINISHING RETURNS':'badge-low','OVER-CONTACTED':'badge-low'};
+  let html = '<table><thead><tr><th>Contacts</th><th>Clients</th><th>Subscribed</th><th>Conv Rate</th><th>Cumul. Reach %</th><th>Zone</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    const cls = zoneColors[r.contact_zone]||'badge-avg';
+    html += `<tr><td>${r.contact_count}</td><td>${r.total_clients.toLocaleString()}</td><td>${r.subscribed.toLocaleString()}</td><td><strong>${r.conv_rate_pct}%</strong></td><td>${r.pct_clients_reached_by_this_count}%</td><td><span class="badge ${cls}">${r.contact_zone}</span></td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('tbl-campaign').innerHTML = html;
+}
+
+function renderSegmentsTable() {
+  const rows = D.segments.slice(0,10);
+  let html = '<table><thead><tr><th>Rank</th><th>Age Band</th><th>Job Tier</th><th>Prev. Contacted</th><th>Clients</th><th>Subscribed</th><th>Conv Rate</th><th>Avg Age</th></tr></thead><tbody>';
+  rows.forEach(r => {
+    html += `<tr><td><strong>${r.segment_rank}</strong></td><td>${r.age_band}</td><td>${r.job_tier}</td><td>${r.previously_contacted?'✅ Yes':'No'}</td><td>${r.clients}</td><td>${r.subscribed}</td><td><strong>${r.conv_rate_pct}%</strong></td><td>${r.avg_age}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('tbl-segments').innerHTML = html;
+}
+
+function renderModelCards() {
+  const best = D.model_eval.reduce((a,b)=>b.f1>a.f1?b:a);
+  let html = '';
+  D.model_eval.forEach(r => {
+    const isBest = r.model === best.model;
+    html += `<div class="model-card${isBest?' best-model':''}">
+      <h4>${r.model}${isBest?' ⭐':''}</h4>
+      <div class="metric-row"><span>Precision</span><span class="val">${r.precision.toFixed(4)}</span></div>
+      <div class="metric-row"><span>Recall</span><span class="val">${r.recall.toFixed(4)}</span></div>
+      <div class="metric-row"><span>F1 Score</span><span class="val">${r.f1.toFixed(4)}</span></div>
+      <div class="metric-row"><span>ROC-AUC</span><span class="val">${r.roc_auc.toFixed(4)}</span></div>
+      <div class="metric-row"><span>PR-AUC</span><span class="val">${r.pr_auc.toFixed(4)}</span></div>
+    </div>`;
+  });
+  document.getElementById('model-cards').innerHTML = html;
+}
+
+function renderCVCharts() {
+  const c1 = makeChart('chart-cv-f1');
+  if (c1) {
+    const names  = D.model_cv.map(r=>r.model);
+    const means  = D.model_cv.map(r=>r.test_f1_mean);
+    const stds   = D.model_cv.map(r=>r.test_f1_std);
+    c1.setOption({
+      tooltip:{trigger:'axis'},
+      grid:{left:10,right:20,top:20,bottom:20,containLabel:true},
+      xAxis:{type:'category',data:names,axisLabel:{fontSize:11}},
+      yAxis:{type:'value',min:0,max:0.6,axisLabel:{formatter:p=>p.toFixed(2)}},
+      series:[{
+        type:'bar',barMaxWidth:80,
+        data:means.map((v,i)=>({value:v,itemStyle:{color:COLORS[i]}})),
+        label:{show:true,position:'top',formatter:p=>p.value.toFixed(3),fontWeight:'bold'}
+      }]
+    });
+  }
+  const c2 = makeChart('chart-cv-multi');
+  if (c2) {
+    const metrics = ['test_f1_mean','test_roc_auc_mean','test_pr_auc_mean','test_precision_mean','test_recall_mean'];
+    const mlabels = ['F1','ROC-AUC','PR-AUC','Precision','Recall'];
+    c2.setOption({
+      tooltip:{trigger:'axis'},
+      legend:{top:0,data:D.model_cv.map(r=>r.model)},
+      grid:{left:10,right:20,top:30,bottom:20,containLabel:true},
+      xAxis:{type:'category',data:mlabels},
+      yAxis:{type:'value',min:0,max:1},
+      series:D.model_cv.map((r,i)=>({
+        name:r.model,type:'bar',
+        data:metrics.map(m=>r[m]),
+        itemStyle:{color:COLORS[i]}
+      }))
+    });
+  }
+}
+
+function renderConfusionMatrix(elId, r) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin:12px auto;max-width:260px">
+      <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:2px;align-items:center">
+        <div></div>
+        <div style="text-align:center;font-size:11px;font-weight:600;padding:4px">Pred NO</div>
+        <div style="text-align:center;font-size:11px;font-weight:600;padding:4px">Pred YES</div>
+        <div style="font-size:11px;font-weight:600;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding:8px 4px">Actual NO</div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">TN</div>
+          <div style="font-size:18px;font-weight:700;color:var(--green)">${r.tn.toLocaleString()}</div>
+        </div>
+        <div style="background:#fef2f2;border-radius:6px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">FP</div>
+          <div style="font-size:18px;font-weight:700;color:var(--red)">${r.fp.toLocaleString()}</div>
+        </div>
+        <div style="font-size:11px;font-weight:600;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding:8px 4px">Actual YES</div>
+        <div style="background:#fef2f2;border-radius:6px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">FN</div>
+          <div style="font-size:18px;font-weight:700;color:var(--red)">${r.fn.toLocaleString()}</div>
+        </div>
+        <div style="background:#eff6ff;border-radius:6px;padding:14px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">TP</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue)">${r.tp.toLocaleString()}</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:center">
+        Recall ${(r.recall*100).toFixed(1)}% &nbsp;|&nbsp; Precision ${(r.precision*100).toFixed(1)}% &nbsp;|&nbsp; F1 ${r.f1.toFixed(3)}
+      </div>
+    </div>`;
+}
+
+function renderModelCompare() {
+  const c = makeChart('chart-model-compare');
+  if (!c) return;
+  const indicators = ['F1','ROC-AUC','PR-AUC','Precision','Recall'];
+  const lr = D.model_eval.find(r=>r.model.includes('LogReg'));
+  const rf = D.model_eval.find(r=>r.model.includes('Random'));
+  if (!lr || !rf) return;
+  c.setOption({
+    tooltip:{trigger:'item'},
+    legend:{data:['Logistic Regression','Random Forest'],bottom:0},
+    radar:{
+      indicator:indicators.map(n=>({name:n,max:1})),
+      center:['50%','48%'],radius:'60%'
+    },
+    series:[{
+      type:'radar',
+      data:[
+        {name:'Logistic Regression',
+         value:[lr.f1,lr.roc_auc,lr.pr_auc,lr.precision,lr.recall],
+         lineStyle:{color:AMBER},areaStyle:{color:AMBER,opacity:0.15},
+         itemStyle:{color:AMBER}},
+        {name:'Random Forest',
+         value:[rf.f1,rf.roc_auc,rf.pr_auc,rf.precision,rf.recall],
+         lineStyle:{color:BLUE},areaStyle:{color:BLUE,opacity:0.15},
+         itemStyle:{color:BLUE}},
+      ]
+    }]
+  });
+}
+
+function renderInsights() {
+  let html = '';
+  D.ai_insights.forEach(ins => {
+    html += `<div class="insight-card">
+      <div class="insight-tag">${ins.category}</div>
+      <h4>${ins.headline}</h4>
+      <p>${ins.detail}</p>
+      <div class="insight-evidence">📊 ${ins.evidence}</div>
+      <div class="insight-action">→ ${ins.action}</div>
+    </div>`;
+  });
+  document.getElementById('insight-grid').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+function initDashboard() {
+  // Section 1 — Overview
+  renderKPIs(D.kpis);
+  renderDonut();
+  renderPoutcomeOverview();
+  renderMonthOverview();
+  renderContactOverview();
+
+  // Section 2 — Customers
+  renderJobChart();
+  renderEduChart();
+  renderMaritalChart();
+  renderHousingChart();
+  renderJobTable();
+
+  // Section 3 — Campaigns
+  renderCampaignCount();
+  renderCampaignZone();
+  renderMonthChart();
+  renderDOWChart();
+  renderCampaignTable();
+
+  // Section 4 — Conversion
+  renderPoutcome();
+  renderDurationBucket();
+  renderDurationOutcome();
+  renderSegments();
+  renderSegmentsTable();
+
+  // Section 5 — ML
+  renderModelCards();
+  renderCVCharts();
+  ['cm-dummy','cm-lr','cm-rf'].forEach((id,i) => renderConfusionMatrix(id, D.model_eval[i]));
+
+  // Section 6 — Explainability
+  renderModelCompare();
+
+  // Section 7 — Insights
+  renderInsights();
+
+  // Resize on window resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('[id^="chart-"]').forEach(el => {
+      const inst = echarts.getInstanceByDom(el);
+      if (inst) inst.resize();
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+// AI CHAT
+// ════════════════════════════════════════════════════════════════
+const AI_API = '/api/ask';
+const AI_PING = '/api/ping';
+let _aiAvailable = null;  // null=unknown, true/false
+
+async function checkAI() {
+  const statusEl = document.getElementById('ai-status-line');
+  try {
+    const r = await fetch(AI_PING, {signal: AbortSignal.timeout(3000)});
+    if (!r.ok) throw new Error('ping failed');
+    const d = await r.json();
+    _aiAvailable = d.ai_available;
+    if (_aiAvailable) {
+      statusEl.textContent = 'AI available — powered by OpenAI. Responses grounded in validated project data.';
+      statusEl.style.color = 'var(--green)';
+    } else {
+      statusEl.textContent = 'AI running in fallback mode (no API key). Rule-based answers from validated data.';
+      statusEl.style.color = 'var(--amber)';
+    }
+  } catch(e) {
+    _aiAvailable = false;
+    statusEl.textContent = 'AI server not running. Start it with: python src/phase8_ai_server.py';
+    statusEl.style.color = 'var(--muted)';
+    document.getElementById('ai-send-btn').disabled = true;
+    document.getElementById('ai-send-btn').style.opacity = '0.5';
+  }
+}
+
+function _appendMsg(text, type, src) {
+  const hist = document.getElementById('ai-chat-history');
+  // Remove empty state on first message
+  const empty = document.getElementById('ai-empty-state');
+  if (empty) empty.remove();
+  const div  = document.createElement('div');
+  div.className = 'ai-msg ai-msg-' + type;
+  div.textContent = text;  // textContent escapes HTML safely
+  if (src) {
+    const small = document.createElement('div');
+    small.className = 'ai-src';
+    small.textContent = src;
+    div.appendChild(small);
+  }
+  hist.appendChild(div);
+  hist.scrollTop = hist.scrollHeight;
+}
+
+function _setThinking(show) {
+  const el = document.getElementById('ai-thinking');
+  if (show && !el) {
+    const div = document.createElement('div');
+    div.id = 'ai-thinking';
+    div.className = 'ai-thinking';
+    div.textContent = 'BankInsight AI is thinking...';
+    document.getElementById('ai-chat-history').appendChild(div);
+  } else if (!show && el) {
+    el.remove();
+  }
+}
+
+async function askAI(question) {
+  if (!question || !question.trim()) return;
+
+  // Add user message
+  _appendMsg(question, 'user', null);
+  _setThinking(true);
+
+  const btn = document.getElementById('ai-send-btn');
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch(AI_API, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question}),
+      signal: AbortSignal.timeout(35000)
+    });
+    _setThinking(false);
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      _appendMsg('Server error: ' + err, 'err', null);
+      return;
+    }
+
+    const data = await resp.json();
+    if (data.error && !data.answer) {
+      _appendMsg('Error: ' + data.error, 'err', null);
+      return;
+    }
+
+    const type = data.source === 'ai' ? 'ai' : 'fallback';
+    const srcLabel = data.source === 'ai'
+      ? ('AI (' + data.model + ')')
+      : ('Fallback — ' + (data.error ? 'AI unavailable: ' + data.error.substring(0,60) : 'rule-based'));
+    _appendMsg(data.answer, type, srcLabel);
+
+  } catch(e) {
+    _setThinking(false);
+    if (e.name === 'TimeoutError') {
+      _appendMsg('Request timed out. The AI server may be under load — please try again.', 'err', null);
+    } else {
+      _appendMsg('Could not reach AI server. Make sure it is running:\n  python src/phase8_ai_server.py', 'err', null);
+    }
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function sendAI() {
+  const inp = document.getElementById('ai-input');
+  const q   = inp.value.trim();
+  if (!q) return;
+  inp.value = '';
+  askAI(q);
+}
+
+// ════════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════════
+loadData();
+// Check AI availability after a short delay (non-blocking)
+setTimeout(checkAI, 800);
+</script>
+</body>
+</html>

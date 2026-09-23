@@ -1,0 +1,4 @@
+model,test_f1_mean,test_f1_std,test_roc_auc_mean,test_roc_auc_std,test_pr_auc_mean,test_pr_auc_std,test_precision_mean,test_precision_std,test_recall_mean,test_recall_std
+M0 Dummy,0.1132,0.0118,0.5008,0.0066,0.113,0.0014,0.1141,0.0119,0.1124,0.0117
+M1 LogReg,0.3856,0.0099,0.774,0.0078,0.4142,0.0132,0.2701,0.0095,0.6742,0.0125
+M2 RandomForest,0.4625,0.0142,0.795,0.0098,0.4598,0.0219,0.3651,0.0152,0.6316,0.0187

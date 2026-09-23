@@ -1,0 +1,11 @@
+check,actual,expected,passed
+Row count preserved,41172,41172,PASS
+y_encoded sum preserved,4639,4639,PASS
+duration excluded,False,False,PASS
+emp_var_rate excluded,False,False,PASS
+nr_employed excluded,False,False,PASS
+cons_price_idx excluded,False,False,PASS
+repeat_success is 0/1,True,True,PASS
+no new nulls,0,0,PASS
+education_encoded values valid,0,0,PASS
+y/y_encoded consistent,True,True,PASS

@@ -1,0 +1,22 @@
+column,dtype,category,description,n_unique,null_count,null_pct,has_unknown_label,min,max,mean,std,sample_values
+age,int64,Numerical,Client age in years,78,0,0.0,,17.0,98.0,40.0241,10.4212,
+job,str,Categorical,Type of job,12,0,0.0,YES,,,,,"housemaid, services, admin., blue-collar, technician, retired, management, unemployed"
+marital,str,Categorical,Marital status,4,0,0.0,YES,,,,,"married, single, divorced, unknown"
+education,str,Categorical,Highest education level,8,0,0.0,YES,,,,,"basic.4y, high.school, basic.6y, basic.9y, professional.course, unknown, university.degree, illiterate"
+default,str,Categorical,Has credit in default? (yes/no/unknown),3,0,0.0,YES,,,,,"no, unknown, yes"
+housing,str,Categorical,Has housing loan? (yes/no/unknown),3,0,0.0,YES,,,,,"no, yes, unknown"
+loan,str,Categorical,Has personal loan? (yes/no/unknown),3,0,0.0,YES,,,,,"no, yes, unknown"
+contact,str,Categorical,Contact communication type (cellular/telephone),2,0,0.0,,,,,,"telephone, cellular"
+month,str,Categorical,Last contact month of year,10,0,0.0,,,,,,"may, jun, jul, aug, oct, nov, dec, mar"
+day_of_week,str,Categorical,Last contact day of week,5,0,0.0,,,,,,"mon, tue, wed, thu, fri"
+duration,int64,Numerical,Last contact duration in seconds (NOTE: unknown before call; kept for reference only),1544,0,0.0,,0.0,4918.0,258.285,259.2792,
+campaign,int64,Numerical,Number of contacts performed during this campaign,42,0,0.0,,1.0,56.0,2.5676,2.77,
+pdays,int64,Numerical,Days since last contact from previous campaign (999 = not previously contacted),27,0,0.0,,0.0,999.0,962.4755,186.9109,
+previous,int64,Numerical,Number of contacts before this campaign,8,0,0.0,,0.0,7.0,0.173,0.4949,
+poutcome,str,Categorical,Outcome of previous marketing campaign,3,0,0.0,,,,,,"nonexistent, failure, success"
+emp.var.rate,float64,Numerical,Employment variation rate (quarterly indicator),10,0,0.0,,-3.4,1.4,0.0819,1.571,
+cons.price.idx,float64,Numerical,Consumer price index (monthly indicator),26,0,0.0,,92.201,94.767,93.5757,0.5788,
+cons.conf.idx,float64,Numerical,Consumer confidence index (monthly indicator),26,0,0.0,,-50.8,-26.9,-40.5026,4.6282,
+euribor3m,float64,Numerical,Euribor 3-month rate (daily indicator),316,0,0.0,,0.634,5.045,3.6213,1.7344,
+nr.employed,float64,Numerical,Number of employees (quarterly indicator),11,0,0.0,,4963.6,5228.1,5167.0359,72.2515,
+y,str,Target/Binary,Has the client subscribed a term deposit? (yes/no),2,0,0.0,,,,,,"no, yes"

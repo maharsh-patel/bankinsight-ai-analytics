@@ -1,0 +1,128 @@
+BankInsight AI - Phase 8: AI Test Report
+==================================================================
+
+Total questions: 10
+AI responses:    0
+Fallback:        10
+
+==================================================================
+
+Q01: Which customer groups had higher conversion rates?
+Source: fallback
+Answer:
+FACT: The overall campaign subscription rate is 11.27% (4,639 subscribed out of 41,172 total contacts).
+FACT: The class imbalance ratio is 7.9:1 (no:yes).
+INTERPRETATION: This severe imbalance means accuracy alone is not a useful metric — the model could achieve 88.73% accuracy by always predicting 'no'. F1-score and ROC-AUC are the appropriate measures.
+------------------------------------------------------------------
+
+Q02: What campaign characteristics are associated with better outcomes?
+Source: fallback
+Answer:
+FACT: Cellular contact achieves 14.74% conversion vs telephone 5.23%.
+FACT: First contact (campaign=1): 13.04% conversion.
+FACT: Conversion drops progressively: 2 contacts=11.46%, 3=10.75%, 4=9.40%, 7+=below 6.1%.
+FACT: March (50.55%), December (48.90%), September (44.91%) are the highest-conversion months.
+FACT: May has the lowest rate (6.44%) despite being the highest-volume month (33.43% of calls).
+INTERPRETATION: Diminishing returns beyond 3 contacts suggests persistent calling alienates rather than convinces. High volume in May likely reflects mass-calling campaigns that dilute lead quality.
+------------------------------------------------------------------
+
+Q03: What are the major findings from the analysis?
+Source: fallback
+Answer:
+Based on validated analytical findings:
+
+1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.
+2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.
+3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.
+4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.
+5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.
+6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.
+------------------------------------------------------------------
+
+Q04: What should a marketing manager investigate?
+Source: fallback
+Answer:
+Based on validated analytical findings:
+
+1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.
+2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.
+3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.
+4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.
+5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.
+6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.
+------------------------------------------------------------------
+
+Q05: How did the Random Forest model perform?
+Source: fallback
+Answer:
+FACT: Three models were compared on a held-out test set of 8,235 records:
+  M0 Dummy baseline:  F1=0.1175, ROC-AUC=0.5032, PR-AUC=0.1134
+  M1 Logistic Regression: F1=0.4038, ROC-AUC=0.7820, PR-AUC=0.4129
+  M2 Random Forest: F1=0.4815, ROC-AUC=0.8120, PR-AUC=0.4778 (BEST)
+FACT: Random Forest 5-fold CV F1=0.4625+/-0.0142 — consistent with test result.
+FACT: PR-AUC of 0.4778 is 4.2x the naive baseline of 0.1127.
+INTERPRETATION: The CV-test consistency confirms no overfitting. Random Forest captures non-linear feature interactions (e.g. poutcome × pdays) better than Logistic Regression.
+------------------------------------------------------------------
+
+Q06: What factors are most predictive of term deposit subscription?
+Source: fallback
+Answer:
+FACT: Top features by Pearson |r| with subscription target:
+  pdays / previously_contacted: 0.325
+  repeat_success (interaction): 0.316
+  poutcome_success (OHE):       0.316
+  euribor3m:                    0.308 (negative — lower rate = higher sub)
+  low_rate_env flag:            0.291
+  pdays_actual:                 0.279
+  previous contacts:            0.230
+FACT: 'duration' was excluded from all models — it is a target leakage feature (unknown before the call is made).
+INTERPRETATION: Prior contact history dominates. Economic conditions (euribor) are the second-strongest signal group, confirming macro context strongly influences savings behaviour.
+------------------------------------------------------------------
+
+Q07: Which months are best for running campaigns and why?
+Source: fallback
+Answer:
+FACT: Cellular contact achieves 14.74% conversion vs telephone 5.23%.
+FACT: First contact (campaign=1): 13.04% conversion.
+FACT: Conversion drops progressively: 2 contacts=11.46%, 3=10.75%, 4=9.40%, 7+=below 6.1%.
+FACT: March (50.55%), December (48.90%), September (44.91%) are the highest-conversion months.
+FACT: May has the lowest rate (6.44%) despite being the highest-volume month (33.43% of calls).
+INTERPRETATION: Diminishing returns beyond 3 contacts suggests persistent calling alienates rather than convinces. High volume in May likely reflects mass-calling campaigns that dilute lead quality.
+------------------------------------------------------------------
+
+Q08: What is the effect of previous campaign outcome on subscription?
+Source: fallback
+Answer:
+FACT: Previous campaign outcome is the strongest categorical predictor:
+  poutcome=success (previously contacted): 65.11% conversion (n=1,373)
+  poutcome=failure (previously contacted): 51.41% conversion (n=142)
+  poutcome=failure (new/not-prev-contacted): 12.94% (n=4,110)
+  poutcome=nonexistent (new client): 8.83% (n=35,547)
+INTERPRETATION: Re-targeting clients with a prior success history should be the top campaign priority. Even failure outcomes show elevated conversion when the client was genuinely contacted previously.
+------------------------------------------------------------------
+
+Q09: What are the limitations of the predictive model?
+Source: fallback
+Answer:
+FACT: Known limitations of the BankInsight predictive model:
+  1. 'duration' excluded — the single strongest raw correlate but is target leakage (unknown before the call is placed). Including it inflates metrics artificially and makes the model useless in a real campaign setting.
+  2. Dataset scope: 2008-2013 Portuguese bank campaigns during the post-crisis low-rate environment. The macro feature (euribor) may not generalize to different economic periods or regions.
+  3. Default threshold (0.5) not tuned: shifting to ~0.3 would improve recall (catch more subscribers) at the cost of lower precision (more wasted calls).
+  4. Class imbalance (8:1): despite class_weight='balanced', the minority class is still under-represented. F1=0.4815 and PR-AUC=0.4778 are honest metrics; accuracy (~90%) would be misleading.
+  5. 'balance' column: does NOT exist in this dataset (UCI v2). Only UCI v1 contained account balance.
+INTERPRETATION: The model is suitable for ranking call lists by subscription probability, not for making hard yes/no predictions. A human review of high-probability cases is recommended.
+------------------------------------------------------------------
+
+Q10: Give me an executive summary of the BankInsight project.
+Source: fallback
+Answer:
+Based on validated analytical findings:
+
+1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.
+2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.
+3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.
+4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.
+5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.
+6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.
+------------------------------------------------------------------
+

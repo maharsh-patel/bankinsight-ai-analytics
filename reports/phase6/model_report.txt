@@ -1,0 +1,134 @@
+======================================================================
+BankInsight AI - Phase 6: Model Evaluation Report
+======================================================================
+
+PROBLEM DEFINITION
+  Task        : Binary classification
+  Target      : y_encoded  (0=no subscription, 1=yes subscription)
+  Features    : Numeric feature columns from Phase 5 (duration excluded)
+  Feature cnt : 41 columns
+  Dataset     : 41,172 rows total
+  Train       : 32,937 rows (80%, stratified)
+  Test        : 8,235 rows  (20%, held-out)
+  CV          : Stratified 5-fold on training set
+
+LEAKAGE PREVENTION
+  - 'duration' excluded (target leakage: unknown before call)
+  - 'y' string label excluded (same as target)
+  - All feature transformations applied before train/test split
+  - No test-set information used in any training step
+
+CLASS IMBALANCE HANDLING
+  - LogisticRegression: class_weight='balanced'
+  - RandomForest:       class_weight='balanced'
+  - DummyClassifier:    stratified (baseline only)
+  - Metrics: F1, ROC-AUC, PR-AUC used (not accuracy)
+
+MODEL SPECIFICATIONS
+
+  M0 DummyClassifier (baseline)
+     Strategy: 'stratified' — predicts proportionally to class distribution
+     Purpose : Lower bound; real models must exceed this on all metrics
+
+  M1 LogisticRegression
+     Solver  : lbfgs, max_iter=1000
+     Scaling : StandardScaler (required for LR)
+     C       : 1.0 (default — no tuning; baseline LR comparison)
+     Class wt: balanced
+
+  M2 RandomForestClassifier (primary model)
+     n_estimators: 200
+     max_depth   : 15  (prevents overfitting on 41K rows)
+     min_samples_leaf: 20
+     class_weight: balanced
+     n_jobs      : -1
+
+======================================================================
+5-FOLD CROSS-VALIDATION RESULTS (training set)
+======================================================================
+
+  M0 Dummy
+    F1       : 0.1132 +/- 0.0118
+    ROC-AUC  : 0.5008 +/- 0.0066
+    PR-AUC   : 0.1130 +/- 0.0014
+    Precision: 0.1141 +/- 0.0119
+    Recall   : 0.1124 +/- 0.0117
+
+  M1 LogReg
+    F1       : 0.3856 +/- 0.0099
+    ROC-AUC  : 0.7740 +/- 0.0078
+    PR-AUC   : 0.4142 +/- 0.0132
+    Precision: 0.2701 +/- 0.0095
+    Recall   : 0.6742 +/- 0.0125
+
+  M2 RandomForest
+    F1       : 0.4625 +/- 0.0142
+    ROC-AUC  : 0.7950 +/- 0.0098
+    PR-AUC   : 0.4598 +/- 0.0219
+    Precision: 0.3651 +/- 0.0152
+    Recall   : 0.6316 +/- 0.0187
+
+======================================================================
+TEST SET EVALUATION RESULTS (held-out 20%)
+======================================================================
+
+  M0 Dummy
+    Precision : 0.1186
+    Recall    : 0.1164
+    F1        : 0.1175
+    ROC-AUC   : 0.5032
+    PR-AUC    : 0.1134
+    Confusion matrix (test n=8,235):
+      True Pos  (TP):   108   False Neg (FN):   820
+      False Pos (FP):   803   True Neg  (TN): 6,504
+
+  M1 LogReg
+    Precision : 0.2826
+    Recall    : 0.7069
+    F1        : 0.4038
+    ROC-AUC   : 0.7820
+    PR-AUC    : 0.4129
+    Confusion matrix (test n=8,235):
+      True Pos  (TP):   656   False Neg (FN):   272
+      False Pos (FP): 1,665   True Neg  (TN): 5,642
+
+  M2 RandomForest
+    Precision : 0.3795
+    Recall    : 0.6584
+    F1        : 0.4815
+    ROC-AUC   : 0.8120
+    PR-AUC    : 0.4778
+    Confusion matrix (test n=8,235):
+      True Pos  (TP):   611   False Neg (FN):   317
+      False Pos (FP):   999   True Neg  (TN): 6,308
+
+======================================================================
+PERFORMANCE INTERPRETATION
+======================================================================
+
+  Best model by F1: M2 RandomForest
+    F1=0.4815  ROC-AUC=0.8120  PR-AUC=0.4778
+
+  Interpretation:
+  - ROC-AUC reflects model's ability to rank true positives above negatives.
+    A value > 0.9 indicates strong discrimination even under class imbalance.
+  - PR-AUC (Precision-Recall) is the most informative metric for imbalanced
+    problems. A naive classifier would score ~0.113 (base rate).
+    PR-AUC >> 0.113 confirms the model adds substantial value.
+  - F1 balances precision and recall for the minority class (subscribers).
+    High recall = fewer missed opportunities; high precision = fewer wasted calls.
+  - Random Forest outperforms Logistic Regression because:
+    (a) It captures non-linear relationships (e.g. poutcome * pdays interaction)
+    (b) Feature importance is not diluted by correlated inputs
+    (c) Ensembled trees reduce variance on the noisy campaign data
+
+  Limitations:
+  - 'duration' (strongest raw correlate) is intentionally excluded.
+    In a real campaign setting this feature is unavailable before calling.
+  - Class imbalance (8:1) means even balanced models will miss some subscribers.
+  - Model is trained on historical campaign data from 2008-2013; 
+    macro-economic conditions may not generalise to current environments.
+  - Threshold was not tuned; default 0.5 cutoff used. Adjusting the
+    threshold toward ~0.3 would improve recall at cost of precision.
+
+======================================================================

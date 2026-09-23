@@ -1,0 +1,123 @@
+======================================================================
+BankInsight AI - Phase 2: Data Cleaning Report
+======================================================================
+
+SUMMARY
+  Original rows        :  41,188
+  Final rows           :  41,172
+  Records removed      :      16  (0.039% of original)
+  Original columns     :      21
+  Final columns        :      23  (added: y_encoded, previously_contacted)
+
+MISSING / NULL VALUES
+  Before cleaning : 0 null cells
+  After cleaning  : 0 null cells
+  Note: 'unknown' is a valid categorical label, not a null.
+
+DUPLICATE RECORDS
+  Before cleaning : 12 exact duplicates
+  After cleaning  : 0 exact duplicates
+
+'unknown' STRING LABEL COUNTS (retained as category)
+  job                 :   330  (0.80%)
+  marital             :    80  (0.19%)
+  education           : 1,730  (4.20%)
+  default             : 8,596  (20.88%)
+  housing             :   990  (2.40%)
+  loan                :   990  (2.40%)
+
+TARGET DISTRIBUTION (after cleaning)
+  'no'  : 36,533  (88.73%)
+  'yes' :  4,639  (11.27%)
+
+NEW / MODIFIED COLUMNS
+  y_encoded             : int (0=no, 1=yes) — binary-encoded target
+  previously_contacted  : int (0/1) — 1 if pdays != 999
+  campaign              : capped at 99th percentile (max=7)
+  all categorical cols  : lowercased and stripped
+  dot columns renamed   : emp.var.rate->emp_var_rate etc.
+
+CLEANING STEPS
+  Step   Rule                                           Before   After  Removed
+  ---------------------------------------------------------------------------
+  2      Remove exact duplicates                        41,188  41,176       12
+  3      Drop duration == 0                             41,176  41,172        4
+  4      Fix dtypes + add y_encoded                     41,172  41,172        0
+  5      Retain 'unknown' in 'default'                  41,172  41,172        0
+  6      Retain 'unknown' in 'education'                41,172  41,172        0
+  7      Retain 'unknown' in housing + loan             41,172  41,172        0
+  8      Retain 'unknown' in job + marital              41,172  41,172        0
+  9      Engineer previously_contacted flag             41,172  41,172        0
+  10     Cap campaign at 99th pct (14)                  41,172  41,172        0
+  11     Rename dot columns to underscores              41,172  41,172        0
+  12     Validate numeric ranges                        41,172  41,172        0
+  13     Verify target labels                           41,172  41,172        0
+  14     Final integrity assertions                     41,172  41,172        0
+
+CLEANING DECISIONS (detailed)
+  [02] Remove exact duplicates
+       Decision  : Drop 2nd copy, keep first
+       Cols      : all
+       Notes     : 12 pairs -> 12 rows removed
+
+  [03] Drop duration == 0
+       Decision  : Remove non-contact records
+       Cols      : duration
+       Notes     : Call never happened; y is always 'no'
+
+  [04] Fix dtypes + add y_encoded
+       Decision  : Cast categories to lowercase str; add y_encoded
+       Cols      : all cat cols + y_encoded
+       Notes     : No rows removed
+
+  [05] Retain 'unknown' in 'default'
+       Decision  : Keep as 3-level category (no / yes / unknown)
+       Cols      : default
+       Notes     : 20.87% unknown — imputing would introduce > 20% noise; treat as category
+
+  [06] Retain 'unknown' in 'education'
+       Decision  : Keep as 8-level category including 'unknown'
+       Cols      : education
+       Notes     : 4.2% unknown — retain as category to preserve information
+
+  [07] Retain 'unknown' in housing + loan
+       Decision  : Keep as 3-level category (yes / no / unknown)
+       Cols      : housing, loan
+       Notes     : 2.4% each — tristate field by design; retain unknown
+
+  [08] Retain 'unknown' in job + marital
+       Decision  : Keep as valid category label
+       Cols      : job, marital
+       Notes     : 0.8% and 0.19% — too small to reliably impute; retain category
+
+  [09] Engineer previously_contacted flag
+       Decision  : Add binary flag: pdays != 999
+       Cols      : pdays (new col: previously_contacted)
+       Notes     : 1515 rows with actual pdays value; 999 -> flag=0
+
+  [10] Cap campaign at 99th pct (14)
+       Decision  : Winsorise values > 14 to 14
+       Cols      : campaign
+       Notes     : 406 values capped; no rows removed
+
+  [11] Rename dot columns to underscores
+       Decision  : emp.var.rate->emp_var_rate etc.
+       Cols      : ['emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'nr.employed']
+       Notes     : Compatibility fix; no data changed
+
+  [12] Validate numeric ranges
+       Decision  : Assert ranges; flag only (no rows dropped)
+       Cols      : age, campaign, previous
+       Notes     : All ranges valid after capping
+
+  [13] Verify target labels
+       Decision  : Assert y in {yes, no}
+       Cols      : y
+       Notes     : Target labels are consistent: only 'yes' and 'no' present
+
+  [14] Final integrity assertions
+       Decision  : All assertions passed
+       Cols      : all
+       Notes     : Dataset is clean and consistent
+
+======================================================================

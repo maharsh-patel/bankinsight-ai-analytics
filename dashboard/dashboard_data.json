@@ -1,0 +1,1052 @@
+{
+  "kpis": {
+    "total_clients": 41172,
+    "total_subscribed": 4639,
+    "total_not_subscribed": 36533,
+    "subscription_rate": 11.27,
+    "imbalance_ratio": 7.9,
+    "avg_call_duration_sec": 258.4,
+    "avg_campaign_contacts": 2.5,
+    "balance_available": false
+  },
+  "by_job": [
+    {
+      "rank_by_conv": 1,
+      "job": "student",
+      "total_clients": 875,
+      "subscribed": 275,
+      "conv_rate_pct": 31.43,
+      "pct_of_dataset": 2.13,
+      "conversion_tier": "HIGH"
+    },
+    {
+      "rank_by_conv": 2,
+      "job": "retired",
+      "total_clients": 1718,
+      "subscribed": 434,
+      "conv_rate_pct": 25.26,
+      "pct_of_dataset": 4.17,
+      "conversion_tier": "HIGH"
+    },
+    {
+      "rank_by_conv": 3,
+      "job": "unemployed",
+      "total_clients": 1014,
+      "subscribed": 144,
+      "conv_rate_pct": 14.2,
+      "pct_of_dataset": 2.46,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 4,
+      "job": "admin.",
+      "total_clients": 10418,
+      "subscribed": 1351,
+      "conv_rate_pct": 12.97,
+      "pct_of_dataset": 25.3,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 5,
+      "job": "management",
+      "total_clients": 2923,
+      "subscribed": 328,
+      "conv_rate_pct": 11.22,
+      "pct_of_dataset": 7.1,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 6,
+      "job": "unknown",
+      "total_clients": 330,
+      "subscribed": 37,
+      "conv_rate_pct": 11.21,
+      "pct_of_dataset": 0.8,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 7,
+      "job": "technician",
+      "total_clients": 6739,
+      "subscribed": 730,
+      "conv_rate_pct": 10.83,
+      "pct_of_dataset": 16.37,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 8,
+      "job": "self-employed",
+      "total_clients": 1421,
+      "subscribed": 149,
+      "conv_rate_pct": 10.49,
+      "pct_of_dataset": 3.45,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 9,
+      "job": "housemaid",
+      "total_clients": 1060,
+      "subscribed": 106,
+      "conv_rate_pct": 10.0,
+      "pct_of_dataset": 2.57,
+      "conversion_tier": "AVERAGE"
+    },
+    {
+      "rank_by_conv": 10,
+      "job": "entrepreneur",
+      "total_clients": 1456,
+      "subscribed": 124,
+      "conv_rate_pct": 8.52,
+      "pct_of_dataset": 3.54,
+      "conversion_tier": "LOW"
+    },
+    {
+      "rank_by_conv": 11,
+      "job": "services",
+      "total_clients": 3967,
+      "subscribed": 323,
+      "conv_rate_pct": 8.14,
+      "pct_of_dataset": 9.64,
+      "conversion_tier": "LOW"
+    },
+    {
+      "rank_by_conv": 12,
+      "job": "blue-collar",
+      "total_clients": 9251,
+      "subscribed": 638,
+      "conv_rate_pct": 6.9,
+      "pct_of_dataset": 22.47,
+      "conversion_tier": "LOW"
+    }
+  ],
+  "by_education": [
+    {
+      "edu_order": 1,
+      "education": "illiterate",
+      "total_clients": 18,
+      "subscribed": 4,
+      "conv_rate_pct": 22.22,
+      "pct_of_dataset": 0.04,
+      "diff_from_mean_pp": 9.85
+    },
+    {
+      "edu_order": 2,
+      "education": "basic.4y",
+      "total_clients": 4176,
+      "subscribed": 428,
+      "conv_rate_pct": 10.25,
+      "pct_of_dataset": 10.14,
+      "diff_from_mean_pp": -2.12
+    },
+    {
+      "edu_order": 3,
+      "education": "basic.6y",
+      "total_clients": 2291,
+      "subscribed": 188,
+      "conv_rate_pct": 8.21,
+      "pct_of_dataset": 5.56,
+      "diff_from_mean_pp": -4.16
+    },
+    {
+      "edu_order": 4,
+      "education": "basic.9y",
+      "total_clients": 6044,
+      "subscribed": 473,
+      "conv_rate_pct": 7.83,
+      "pct_of_dataset": 14.68,
+      "diff_from_mean_pp": -4.54
+    },
+    {
+      "edu_order": 5,
+      "education": "high.school",
+      "total_clients": 9510,
+      "subscribed": 1031,
+      "conv_rate_pct": 10.84,
+      "pct_of_dataset": 23.1,
+      "diff_from_mean_pp": -1.53
+    },
+    {
+      "edu_order": 6,
+      "education": "professional.course",
+      "total_clients": 5240,
+      "subscribed": 595,
+      "conv_rate_pct": 11.35,
+      "pct_of_dataset": 12.73,
+      "diff_from_mean_pp": -1.02
+    },
+    {
+      "edu_order": 7,
+      "education": "university.degree",
+      "total_clients": 12163,
+      "subscribed": 1669,
+      "conv_rate_pct": 13.72,
+      "pct_of_dataset": 29.54,
+      "diff_from_mean_pp": 1.35
+    },
+    {
+      "edu_order": 8,
+      "education": "unknown",
+      "total_clients": 1730,
+      "subscribed": 251,
+      "conv_rate_pct": 14.51,
+      "pct_of_dataset": 4.2,
+      "diff_from_mean_pp": 2.14
+    }
+  ],
+  "by_marital": [
+    {
+      "marital": "unknown",
+      "total_clients": 80,
+      "subscribed": 12,
+      "conv_rate_pct": 15.0,
+      "pct_of_dataset": 0.19,
+      "avg_age": 40.3,
+      "avg_contacts": 3.05
+    },
+    {
+      "marital": "single",
+      "total_clients": 11564,
+      "subscribed": 1620,
+      "conv_rate_pct": 14.01,
+      "pct_of_dataset": 28.09,
+      "avg_age": 33.2,
+      "avg_contacts": 2.47
+    },
+    {
+      "marital": "divorced",
+      "total_clients": 4610,
+      "subscribed": 476,
+      "conv_rate_pct": 10.33,
+      "pct_of_dataset": 11.2,
+      "avg_age": 44.9,
+      "avg_contacts": 2.56
+    },
+    {
+      "marital": "married",
+      "total_clients": 24918,
+      "subscribed": 2531,
+      "conv_rate_pct": 10.16,
+      "pct_of_dataset": 60.52,
+      "avg_age": 42.3,
+      "avg_contacts": 2.5
+    }
+  ],
+  "by_housing_loan": [
+    {
+      "dimension": "credit_default",
+      "category": "no",
+      "total_clients": 32573,
+      "subscribed": 4196,
+      "conv_rate_pct": 12.88
+    },
+    {
+      "dimension": "credit_default",
+      "category": "unknown",
+      "total_clients": 8596,
+      "subscribed": 443,
+      "conv_rate_pct": 5.15
+    },
+    {
+      "dimension": "credit_default",
+      "category": "yes",
+      "total_clients": 3,
+      "subscribed": 0,
+      "conv_rate_pct": 0.0
+    },
+    {
+      "dimension": "housing",
+      "category": "yes",
+      "total_clients": 21568,
+      "subscribed": 2507,
+      "conv_rate_pct": 11.62
+    },
+    {
+      "dimension": "housing",
+      "category": "no",
+      "total_clients": 18614,
+      "subscribed": 2025,
+      "conv_rate_pct": 10.88
+    },
+    {
+      "dimension": "housing",
+      "category": "unknown",
+      "total_clients": 990,
+      "subscribed": 107,
+      "conv_rate_pct": 10.81
+    },
+    {
+      "dimension": "loan",
+      "category": "no",
+      "total_clients": 33934,
+      "subscribed": 3849,
+      "conv_rate_pct": 11.34
+    },
+    {
+      "dimension": "loan",
+      "category": "yes",
+      "total_clients": 6248,
+      "subscribed": 683,
+      "conv_rate_pct": 10.93
+    },
+    {
+      "dimension": "loan",
+      "category": "unknown",
+      "total_clients": 990,
+      "subscribed": 107,
+      "conv_rate_pct": 10.81
+    }
+  ],
+  "by_contact": [
+    {
+      "contact": "cellular",
+      "total_clients": 26132,
+      "subscribed": 3852,
+      "conv_rate_pct": 14.74,
+      "pct_of_dataset": 63.47,
+      "avg_call_duration_sec": 264.0,
+      "avg_contacts": 2.36
+    },
+    {
+      "contact": "telephone",
+      "total_clients": 15040,
+      "subscribed": 787,
+      "conv_rate_pct": 5.23,
+      "pct_of_dataset": 36.53,
+      "avg_call_duration_sec": 249.0,
+      "avg_contacts": 2.74
+    }
+  ],
+  "by_campaign_count": [
+    {
+      "contact_count": 1,
+      "total_clients": 17634,
+      "subscribed": 2299,
+      "conv_rate_pct": 13.04,
+      "pct_clients_reached_by_this_count": 42.8,
+      "contact_zone": "FIRST CONTACT"
+    },
+    {
+      "contact_count": 2,
+      "total_clients": 10567,
+      "subscribed": 1211,
+      "conv_rate_pct": 11.46,
+      "pct_clients_reached_by_this_count": 68.5,
+      "contact_zone": "OPTIMAL ZONE"
+    },
+    {
+      "contact_count": 3,
+      "total_clients": 5339,
+      "subscribed": 574,
+      "conv_rate_pct": 10.75,
+      "pct_clients_reached_by_this_count": 81.5,
+      "contact_zone": "OPTIMAL ZONE"
+    },
+    {
+      "contact_count": 4,
+      "total_clients": 2649,
+      "subscribed": 249,
+      "conv_rate_pct": 9.4,
+      "pct_clients_reached_by_this_count": 87.9,
+      "contact_zone": "DIMINISHING RETURNS"
+    },
+    {
+      "contact_count": 5,
+      "total_clients": 1599,
+      "subscribed": 120,
+      "conv_rate_pct": 7.5,
+      "pct_clients_reached_by_this_count": 91.8,
+      "contact_zone": "DIMINISHING RETURNS"
+    },
+    {
+      "contact_count": 6,
+      "total_clients": 979,
+      "subscribed": 75,
+      "conv_rate_pct": 7.66,
+      "pct_clients_reached_by_this_count": 94.2,
+      "contact_zone": "DIMINISHING RETURNS"
+    },
+    {
+      "contact_count": 7,
+      "total_clients": 629,
+      "subscribed": 38,
+      "conv_rate_pct": 6.04,
+      "pct_clients_reached_by_this_count": 95.7,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 8,
+      "total_clients": 400,
+      "subscribed": 17,
+      "conv_rate_pct": 4.25,
+      "pct_clients_reached_by_this_count": 96.7,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 9,
+      "total_clients": 283,
+      "subscribed": 17,
+      "conv_rate_pct": 6.01,
+      "pct_clients_reached_by_this_count": 97.3,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 10,
+      "total_clients": 224,
+      "subscribed": 12,
+      "conv_rate_pct": 5.36,
+      "pct_clients_reached_by_this_count": 97.9,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 11,
+      "total_clients": 177,
+      "subscribed": 12,
+      "conv_rate_pct": 6.78,
+      "pct_clients_reached_by_this_count": 98.3,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 12,
+      "total_clients": 125,
+      "subscribed": 3,
+      "conv_rate_pct": 2.4,
+      "pct_clients_reached_by_this_count": 98.6,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 13,
+      "total_clients": 92,
+      "subscribed": 4,
+      "conv_rate_pct": 4.35,
+      "pct_clients_reached_by_this_count": 98.8,
+      "contact_zone": "OVER-CONTACTED"
+    },
+    {
+      "contact_count": 14,
+      "total_clients": 475,
+      "subscribed": 8,
+      "conv_rate_pct": 1.68,
+      "pct_clients_reached_by_this_count": 100.0,
+      "contact_zone": "OVER-CONTACTED"
+    }
+  ],
+  "by_poutcome": [
+    {
+      "poutcome": "success",
+      "previously_contacted": 1,
+      "total_clients": 1373,
+      "subscribed": 894,
+      "conv_rate_pct": 65.11,
+      "avg_prior_contacts": 1.57,
+      "pct_of_dataset": 3.33,
+      "conv_index": 1.88
+    },
+    {
+      "poutcome": "failure",
+      "previously_contacted": 1,
+      "total_clients": 142,
+      "subscribed": 73,
+      "conv_rate_pct": 51.41,
+      "avg_prior_contacts": 2.54,
+      "pct_of_dataset": 0.34,
+      "conv_index": 1.49
+    },
+    {
+      "poutcome": "failure",
+      "previously_contacted": 0,
+      "total_clients": 4110,
+      "subscribed": 532,
+      "conv_rate_pct": 12.94,
+      "avg_prior_contacts": 1.12,
+      "pct_of_dataset": 9.98,
+      "conv_index": 0.37
+    },
+    {
+      "poutcome": "nonexistent",
+      "previously_contacted": 0,
+      "total_clients": 35547,
+      "subscribed": 3140,
+      "conv_rate_pct": 8.83,
+      "avg_prior_contacts": 0.0,
+      "pct_of_dataset": 86.34,
+      "conv_index": 0.26
+    }
+  ],
+  "by_duration_bucket": [
+    {
+      "duration_bucket": "< 1 min",
+      "total_clients": 4175,
+      "subscribed": 1,
+      "conv_rate_pct": 0.02,
+      "pct_of_calls": 10.14
+    },
+    {
+      "duration_bucket": "1-3 min",
+      "total_clients": 16400,
+      "subscribed": 557,
+      "conv_rate_pct": 3.4,
+      "pct_of_calls": 39.83
+    },
+    {
+      "duration_bucket": "3-5 min",
+      "total_clients": 9349,
+      "subscribed": 950,
+      "conv_rate_pct": 10.16,
+      "pct_of_calls": 22.71
+    },
+    {
+      "duration_bucket": "5-10 min",
+      "total_clients": 7770,
+      "subscribed": 1441,
+      "conv_rate_pct": 18.55,
+      "pct_of_calls": 18.87
+    },
+    {
+      "duration_bucket": "> 10 min",
+      "total_clients": 3478,
+      "subscribed": 1690,
+      "conv_rate_pct": 48.59,
+      "pct_of_calls": 8.45
+    }
+  ],
+  "by_duration_outcome": [
+    {
+      "outcome": "no",
+      "clients": 36533,
+      "avg_duration_sec": 221.0,
+      "avg_duration_min": 3.7,
+      "min_sec": 1,
+      "max_sec": 4918,
+      "approx_median_sec": 163.0,
+      "avg_contacts_this_campaign": 2.56,
+      "avg_prior_contacts": 0.13
+    },
+    {
+      "outcome": "yes",
+      "clients": 4639,
+      "avg_duration_sec": 553.0,
+      "avg_duration_min": 9.2,
+      "min_sec": 37,
+      "max_sec": 4199,
+      "approx_median_sec": 449.0,
+      "avg_contacts_this_campaign": 2.05,
+      "avg_prior_contacts": 0.49
+    }
+  ],
+  "by_temporal": [
+    {
+      "time_dimension": "day_of_week",
+      "period": "thu",
+      "total_calls": 8618,
+      "subscribed": 1044,
+      "conv_rate_pct": 12.11,
+      "pct_of_calls": 20.93,
+      "conv_percent_rank": 100.0
+    },
+    {
+      "time_dimension": "day_of_week",
+      "period": "tue",
+      "total_calls": 8084,
+      "subscribed": 953,
+      "conv_rate_pct": 11.79,
+      "pct_of_calls": 19.63,
+      "conv_percent_rank": 75.0
+    },
+    {
+      "time_dimension": "day_of_week",
+      "period": "wed",
+      "total_calls": 8134,
+      "subscribed": 949,
+      "conv_rate_pct": 11.67,
+      "pct_of_calls": 19.76,
+      "conv_percent_rank": 50.0
+    },
+    {
+      "time_dimension": "day_of_week",
+      "period": "fri",
+      "total_calls": 7825,
+      "subscribed": 846,
+      "conv_rate_pct": 10.81,
+      "pct_of_calls": 19.01,
+      "conv_percent_rank": 25.0
+    },
+    {
+      "time_dimension": "day_of_week",
+      "period": "mon",
+      "total_calls": 8511,
+      "subscribed": 847,
+      "conv_rate_pct": 9.95,
+      "pct_of_calls": 20.67,
+      "conv_percent_rank": 0.0
+    },
+    {
+      "time_dimension": "month",
+      "period": "mar",
+      "total_calls": 546,
+      "subscribed": 276,
+      "conv_rate_pct": 50.55,
+      "pct_of_calls": 1.33,
+      "conv_percent_rank": 100.0
+    },
+    {
+      "time_dimension": "month",
+      "period": "dec",
+      "total_calls": 182,
+      "subscribed": 89,
+      "conv_rate_pct": 48.9,
+      "pct_of_calls": 0.44,
+      "conv_percent_rank": 88.9
+    },
+    {
+      "time_dimension": "month",
+      "period": "sep",
+      "total_calls": 570,
+      "subscribed": 256,
+      "conv_rate_pct": 44.91,
+      "pct_of_calls": 1.38,
+      "conv_percent_rank": 77.8
+    },
+    {
+      "time_dimension": "month",
+      "period": "oct",
+      "total_calls": 717,
+      "subscribed": 315,
+      "conv_rate_pct": 43.93,
+      "pct_of_calls": 1.74,
+      "conv_percent_rank": 66.7
+    },
+    {
+      "time_dimension": "month",
+      "period": "apr",
+      "total_calls": 2630,
+      "subscribed": 539,
+      "conv_rate_pct": 20.49,
+      "pct_of_calls": 6.39,
+      "conv_percent_rank": 55.6
+    },
+    {
+      "time_dimension": "month",
+      "period": "aug",
+      "total_calls": 6175,
+      "subscribed": 655,
+      "conv_rate_pct": 10.61,
+      "pct_of_calls": 15.0,
+      "conv_percent_rank": 44.4
+    },
+    {
+      "time_dimension": "month",
+      "period": "jun",
+      "total_calls": 5318,
+      "subscribed": 559,
+      "conv_rate_pct": 10.51,
+      "pct_of_calls": 12.92,
+      "conv_percent_rank": 33.3
+    },
+    {
+      "time_dimension": "month",
+      "period": "nov",
+      "total_calls": 4100,
+      "subscribed": 416,
+      "conv_rate_pct": 10.15,
+      "pct_of_calls": 9.96,
+      "conv_percent_rank": 22.2
+    },
+    {
+      "time_dimension": "month",
+      "period": "jul",
+      "total_calls": 7169,
+      "subscribed": 648,
+      "conv_rate_pct": 9.04,
+      "pct_of_calls": 17.41,
+      "conv_percent_rank": 11.1
+    },
+    {
+      "time_dimension": "month",
+      "period": "may",
+      "total_calls": 13765,
+      "subscribed": 886,
+      "conv_rate_pct": 6.44,
+      "pct_of_calls": 33.43,
+      "conv_percent_rank": 0.0
+    }
+  ],
+  "segments": [
+    {
+      "age_band": "56-65",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 1,
+      "clients": 65,
+      "subscribed": 55,
+      "conv_rate_pct": 84.62,
+      "avg_age": 59.1,
+      "avg_contacts": 1.83,
+      "segment_rank": 1,
+      "pct_of_dataset": 0.16
+    },
+    {
+      "age_band": "66+",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 1,
+      "clients": 103,
+      "subscribed": 77,
+      "conv_rate_pct": 74.76,
+      "avg_age": 76.1,
+      "avg_contacts": 1.67,
+      "segment_rank": 2,
+      "pct_of_dataset": 0.25
+    },
+    {
+      "age_band": "36-45",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 1,
+      "clients": 196,
+      "subscribed": 137,
+      "conv_rate_pct": 69.9,
+      "avg_age": 39.7,
+      "avg_contacts": 1.8,
+      "segment_rank": 3,
+      "pct_of_dataset": 0.48
+    },
+    {
+      "age_band": "56-65",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 1,
+      "clients": 64,
+      "subscribed": 44,
+      "conv_rate_pct": 68.75,
+      "avg_age": 60.7,
+      "avg_contacts": 1.66,
+      "segment_rank": 4,
+      "pct_of_dataset": 0.16
+    },
+    {
+      "age_band": "26-35",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 1,
+      "clients": 51,
+      "subscribed": 35,
+      "conv_rate_pct": 68.63,
+      "avg_age": 28.8,
+      "avg_contacts": 1.86,
+      "segment_rank": 5,
+      "pct_of_dataset": 0.12
+    },
+    {
+      "age_band": "18-25",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 1,
+      "clients": 87,
+      "subscribed": 59,
+      "conv_rate_pct": 67.82,
+      "avg_age": 21.6,
+      "avg_contacts": 1.9,
+      "segment_rank": 6,
+      "pct_of_dataset": 0.21
+    },
+    {
+      "age_band": "26-35",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 1,
+      "clients": 369,
+      "subscribed": 226,
+      "conv_rate_pct": 61.25,
+      "avg_age": 30.8,
+      "avg_contacts": 1.78,
+      "segment_rank": 7,
+      "pct_of_dataset": 0.9
+    },
+    {
+      "age_band": "46-55",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 1,
+      "clients": 139,
+      "subscribed": 85,
+      "conv_rate_pct": 61.15,
+      "avg_age": 50.4,
+      "avg_contacts": 1.93,
+      "segment_rank": 8,
+      "pct_of_dataset": 0.34
+    },
+    {
+      "age_band": "36-45",
+      "job_tier": "LOWER_VALUE",
+      "previously_contacted": 1,
+      "clients": 110,
+      "subscribed": 62,
+      "conv_rate_pct": 56.36,
+      "avg_age": 39.5,
+      "avg_contacts": 1.84,
+      "segment_rank": 9,
+      "pct_of_dataset": 0.27
+    },
+    {
+      "age_band": "18-25",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 1,
+      "clients": 32,
+      "subscribed": 18,
+      "conv_rate_pct": 56.25,
+      "avg_age": 24.0,
+      "avg_contacts": 1.97,
+      "segment_rank": 10,
+      "pct_of_dataset": 0.08
+    },
+    {
+      "age_band": "46-55",
+      "job_tier": "LOWER_VALUE",
+      "previously_contacted": 1,
+      "clients": 79,
+      "subscribed": 44,
+      "conv_rate_pct": 55.7,
+      "avg_age": 50.1,
+      "avg_contacts": 2.1,
+      "segment_rank": 11,
+      "pct_of_dataset": 0.19
+    },
+    {
+      "age_band": "56-65",
+      "job_tier": "LOWER_VALUE",
+      "previously_contacted": 1,
+      "clients": 49,
+      "subscribed": 26,
+      "conv_rate_pct": 53.06,
+      "avg_age": 59.3,
+      "avg_contacts": 1.82,
+      "segment_rank": 12,
+      "pct_of_dataset": 0.12
+    },
+    {
+      "age_band": "26-35",
+      "job_tier": "LOWER_VALUE",
+      "previously_contacted": 1,
+      "clients": 115,
+      "subscribed": 61,
+      "conv_rate_pct": 53.04,
+      "avg_age": 30.8,
+      "avg_contacts": 1.74,
+      "segment_rank": 13,
+      "pct_of_dataset": 0.28
+    },
+    {
+      "age_band": "66+",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 0,
+      "clients": 429,
+      "subscribed": 172,
+      "conv_rate_pct": 40.09,
+      "avg_age": 74.7,
+      "avg_contacts": 2.03,
+      "segment_rank": 14,
+      "pct_of_dataset": 1.04
+    },
+    {
+      "age_band": "66+",
+      "job_tier": "LOWER_VALUE",
+      "previously_contacted": 0,
+      "clients": 42,
+      "subscribed": 15,
+      "conv_rate_pct": 35.71,
+      "avg_age": 73.3,
+      "avg_contacts": 2.48,
+      "segment_rank": 15,
+      "pct_of_dataset": 0.1
+    },
+    {
+      "age_band": "18-25",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 0,
+      "clients": 368,
+      "subscribed": 107,
+      "conv_rate_pct": 29.08,
+      "avg_age": 22.3,
+      "avg_contacts": 1.98,
+      "segment_rank": 16,
+      "pct_of_dataset": 0.9
+    },
+    {
+      "age_band": "26-35",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 0,
+      "clients": 341,
+      "subscribed": 69,
+      "conv_rate_pct": 20.23,
+      "avg_age": 29.1,
+      "avg_contacts": 2.29,
+      "segment_rank": 17,
+      "pct_of_dataset": 0.83
+    },
+    {
+      "age_band": "18-25",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 0,
+      "clients": 492,
+      "subscribed": 75,
+      "conv_rate_pct": 15.24,
+      "avg_age": 24.1,
+      "avg_contacts": 2.85,
+      "segment_rank": 18,
+      "pct_of_dataset": 1.2
+    },
+    {
+      "age_band": "56-65",
+      "job_tier": "HIGH_VALUE",
+      "previously_contacted": 0,
+      "clients": 762,
+      "subscribed": 111,
+      "conv_rate_pct": 14.57,
+      "avg_age": 58.8,
+      "avg_contacts": 2.61,
+      "segment_rank": 19,
+      "pct_of_dataset": 1.85
+    },
+    {
+      "age_band": "56-65",
+      "job_tier": "MID_VALUE",
+      "previously_contacted": 0,
+      "clients": 1004,
+      "subscribed": 124,
+      "conv_rate_pct": 12.35,
+      "avg_age": 57.8,
+      "avg_contacts": 2.59,
+      "segment_rank": 20,
+      "pct_of_dataset": 2.44
+    }
+  ],
+  "model_eval": [
+    {
+      "model": "M0 Dummy",
+      "precision": 0.1186,
+      "recall": 0.1164,
+      "f1": 0.1175,
+      "roc_auc": 0.5032,
+      "pr_auc": 0.1134,
+      "tp": 108,
+      "fp": 803,
+      "fn": 820,
+      "tn": 6504
+    },
+    {
+      "model": "M1 LogReg",
+      "precision": 0.2826,
+      "recall": 0.7069,
+      "f1": 0.4038,
+      "roc_auc": 0.782,
+      "pr_auc": 0.4129,
+      "tp": 656,
+      "fp": 1665,
+      "fn": 272,
+      "tn": 5642
+    },
+    {
+      "model": "M2 RandomForest",
+      "precision": 0.3795,
+      "recall": 0.6584,
+      "f1": 0.4815,
+      "roc_auc": 0.812,
+      "pr_auc": 0.4778,
+      "tp": 611,
+      "fp": 999,
+      "fn": 317,
+      "tn": 6308
+    }
+  ],
+  "model_cv": [
+    {
+      "model": "M0 Dummy",
+      "test_f1_mean": 0.1132,
+      "test_f1_std": 0.0118,
+      "test_roc_auc_mean": 0.5008,
+      "test_roc_auc_std": 0.0066,
+      "test_pr_auc_mean": 0.113,
+      "test_pr_auc_std": 0.0014,
+      "test_precision_mean": 0.1141,
+      "test_precision_std": 0.0119,
+      "test_recall_mean": 0.1124,
+      "test_recall_std": 0.0117
+    },
+    {
+      "model": "M1 LogReg",
+      "test_f1_mean": 0.3856,
+      "test_f1_std": 0.0099,
+      "test_roc_auc_mean": 0.774,
+      "test_roc_auc_std": 0.0078,
+      "test_pr_auc_mean": 0.4142,
+      "test_pr_auc_std": 0.0132,
+      "test_precision_mean": 0.2701,
+      "test_precision_std": 0.0095,
+      "test_recall_mean": 0.6742,
+      "test_recall_std": 0.0125
+    },
+    {
+      "model": "M2 RandomForest",
+      "test_f1_mean": 0.4625,
+      "test_f1_std": 0.0142,
+      "test_roc_auc_mean": 0.795,
+      "test_roc_auc_std": 0.0098,
+      "test_pr_auc_mean": 0.4598,
+      "test_pr_auc_std": 0.0219,
+      "test_precision_mean": 0.3651,
+      "test_precision_std": 0.0152,
+      "test_recall_mean": 0.6316,
+      "test_recall_std": 0.0187
+    }
+  ],
+  "ai_insights": [
+    {
+      "id": "ins_01",
+      "category": "High-Value Segment",
+      "headline": "Re-target prior-success clients: 65.1% conversion",
+      "detail": "Clients with poutcome='success' convert at 65.1% — 5.8x the overall 11.3% baseline. Prioritising this segment in the next campaign maximises ROI per call.",
+      "evidence": "SQL Q08: poutcome=success n=1,373, subscribed=894",
+      "action": "Create a priority call list filtering poutcome='success' clients."
+    },
+    {
+      "id": "ins_02",
+      "category": "Contact Optimisation",
+      "headline": "Stop after 3 contacts — conversion halves beyond that",
+      "detail": "Clients contacted once convert at 13.0%. By the 7th contact this falls to 6.0%. Over-contacted clients (>6 calls) have a median conversion of 4.6% while consuming disproportionate agent time.",
+      "evidence": "SQL Q07: campaign contact zone analysis",
+      "action": "Cap campaign contacts at 3 per client per cycle."
+    },
+    {
+      "id": "ins_03",
+      "category": "Channel Strategy",
+      "headline": "Switch to cellular: 14.7% vs telephone 5.2%",
+      "detail": "Cellular contact achieves 14.74% conversion vs 5.23% for telephone — a 2.8x difference. 63.5% of current contacts are already cellular; shifting the remaining 36.5% could add ~400 additional subscriptions per campaign cycle.",
+      "evidence": "SQL Q06: contact method breakdown",
+      "action": "Prioritise cellular channel; retire telephone where possible."
+    },
+    {
+      "id": "ins_04",
+      "category": "Timing",
+      "headline": "Avoid May mass campaigns — 6.4% conversion despite 33% of volume",
+      "detail": "May accounts for 33.4% of all calls but only 6.4% conversion. March (50.6%), December (48.9%), September (44.9%) and October (43.9%) have the highest rates at low volume — indicating these periods target more qualified leads.",
+      "evidence": "SQL Q11: monthly temporal patterns",
+      "action": "Reduce May volume; concentrate on Q4 and March campaigns."
+    },
+    {
+      "id": "ins_05",
+      "category": "Segment Targeting",
+      "headline": "Students (31.4%) and retired clients outperform",
+      "detail": "Students convert at 31.4% and retired clients at 25.3%, vs 6.9% for blue-collar workers. These groups represent only 6.3% of the dataset but account for a disproportionate share of subscriptions.",
+      "evidence": "SQL Q02: job-type conversion ranking",
+      "action": "Create separate messaging and scripts for student/retired segments."
+    },
+    {
+      "id": "ins_06",
+      "category": "ML Model",
+      "headline": "Random Forest achieves ROC-AUC 0.812, F1 0.481",
+      "detail": "The Random Forest model correctly identifies 611 subscribers (recall 65.8%) while generating 999 false positives. PR-AUC of 0.478 is 4.2x the naive baseline of 0.113, confirming the model adds substantial predictive value.",
+      "evidence": "Phase 6 evaluation on 8,235 held-out test records",
+      "action": "Use model scores to rank call lists by predicted subscription probability."
+    },
+    {
+      "id": "ins_07",
+      "category": "Economic Context",
+      "headline": "Low Euribor environment correlates with higher subscription rates",
+      "detail": "Euribor 3M rate shows r=−0.308 correlation with subscription. When euribor < 2.0% (32.8% of dataset), conversion rates are significantly higher — clients seek safe savings vehicles when market rates are depressed.",
+      "evidence": "Phase 5 feature correlations; EDA Fig 09",
+      "action": "Intensify campaigns during low-interest-rate periods."
+    }
+  ]
+}

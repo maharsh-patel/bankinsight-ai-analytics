@@ -1,0 +1,5 @@
+marital,total_clients,subscribed,conv_rate_pct,pct_of_dataset,avg_age,avg_contacts
+unknown,80,12,15.0,0.19,40.3,3.05
+single,11564,1620,14.01,28.09,33.2,2.47
+divorced,4610,476,10.33,11.2,44.9,2.56
+married,24918,2531,10.16,60.52,42.3,2.5

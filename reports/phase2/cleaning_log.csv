@@ -1,0 +1,14 @@
+step,rule,decision,rows_before,rows_after,rows_removed,cols_affected,notes
+2,Remove exact duplicates,"Drop 2nd copy, keep first",41188,41176,12,all,12 pairs -> 12 rows removed
+3,Drop duration == 0,Remove non-contact records,41176,41172,4,duration,Call never happened; y is always 'no'
+4,Fix dtypes + add y_encoded,Cast categories to lowercase str; add y_encoded,41172,41172,0,all cat cols + y_encoded,No rows removed
+5,Retain 'unknown' in 'default',Keep as 3-level category (no / yes / unknown),41172,41172,0,default,20.87% unknown — imputing would introduce > 20% noise; treat as category
+6,Retain 'unknown' in 'education',Keep as 8-level category including 'unknown',41172,41172,0,education,4.2% unknown — retain as category to preserve information
+7,Retain 'unknown' in housing + loan,Keep as 3-level category (yes / no / unknown),41172,41172,0,"housing, loan",2.4% each — tristate field by design; retain unknown
+8,Retain 'unknown' in job + marital,Keep as valid category label,41172,41172,0,"job, marital",0.8% and 0.19% — too small to reliably impute; retain category
+9,Engineer previously_contacted flag,Add binary flag: pdays != 999,41172,41172,0,pdays (new col: previously_contacted),1515 rows with actual pdays value; 999 -> flag=0
+10,Cap campaign at 99th pct (14),Winsorise values > 14 to 14,41172,41172,0,campaign,406 values capped; no rows removed
+11,Rename dot columns to underscores,emp.var.rate->emp_var_rate etc.,41172,41172,0,"['emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'nr.employed']",Compatibility fix; no data changed
+12,Validate numeric ranges,Assert ranges; flag only (no rows dropped),41172,41172,0,"age, campaign, previous",All ranges valid after capping
+13,Verify target labels,"Assert y in {yes, no}",41172,41172,0,y,Target labels are consistent: only 'yes' and 'no' present
+14,Final integrity assertions,All assertions passed,41172,41172,0,all,Dataset is clean and consistent

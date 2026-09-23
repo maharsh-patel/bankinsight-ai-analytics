@@ -1,0 +1,9 @@
+edu_order,education,total_clients,subscribed,conv_rate_pct,pct_of_dataset,diff_from_mean_pp
+1,illiterate,18,4,22.22,0.04,9.85
+2,basic.4y,4176,428,10.25,10.14,-2.12
+3,basic.6y,2291,188,8.21,5.56,-4.16
+4,basic.9y,6044,473,7.83,14.68,-4.54
+5,high.school,9510,1031,10.84,23.1,-1.53
+6,professional.course,5240,595,11.35,12.73,-1.02
+7,university.degree,12163,1669,13.72,29.54,1.35
+8,unknown,1730,251,14.51,4.2,2.14

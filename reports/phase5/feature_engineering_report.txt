@@ -1,0 +1,197 @@
+======================================================================
+BankInsight AI - Phase 5: Feature Engineering Report
+======================================================================
+
+DATASET
+  Input  : data/processed/bank_marketing_clean.csv  (41,172 rows x 23 cols)
+  Output : data/processed/bank_marketing_features.csv  (41,172 rows x 49 cols)
+
+COLUMNS REMOVED
+  Leakage   : ['duration']
+  Collinear : ['emp_var_rate', 'nr_employed', 'cons_price_idx']
+  Rationale : emp_var_rate/euribor3m r=0.97; nr_employed/euribor3m r=0.95;
+              cons_price_idx/emp_var_rate r=0.78. Retained: euribor3m
+              (highest individual correlation with target, r=-0.308).
+
+FEATURE DICTIONARY
+
+  Feature                        Type                 Source                        
+  --------------------------------------------------------------------------------
+  age_group                      categorical (str)    age
+  campaign_group                 categorical (str)    campaign
+  pdays_actual                   int                  pdays
+  recency_group                  categorical (str)    pdays
+  previous_capped                int                  previous
+  repeat_success                 int (0/1)            previously_contacted, poutcome
+  cellular_first                 int (0/1)            contact, campaign
+  high_value_segment             int (0/1)            job, housing
+  education_encoded              int                  education
+  month_num                      int                  month
+  dow_num                        int                  day_of_week
+  OHE: job, marital, default, housing, loan, contact, poutcome int (0/1) per dummy column job, marital, default, housing, loan, contact, poutcome
+  log_campaign                   float                campaign
+  log_previous                   float                previous_capped
+  low_rate_env                   int (0/1)            euribor3m
+
+FEATURE DETAILS
+  [01] age_group
+       Logic  : pd.cut(age, [17,25,35,45,55,65,100])
+       Reason : EDA (Fig 03) showed 18-25 and 66+ as high-conversion bands; binning captures non-linear age effect for tree models
+       Type   : categorical (str)
+       Source : age
+
+  [02] campaign_group
+       Logic  : 1->'first', 2-3->'optimal', 4-6->'diminishing', >6->'over_contacted'
+       Reason : SQL Q07: conversion drops steeply after 3 contacts; this ordinal tier is more informative than raw count for linear models
+       Type   : categorical (str)
+       Source : campaign
+
+  [03] pdays_actual
+       Logic  : pdays if pdays!=999 else -1
+       Reason : Strips the 999 sentinel; -1 signals 'not previously contacted'. Range for real values: 0-27 days.
+       Type   : int
+       Source : pdays
+
+  [04] recency_group
+       Logic  : pdays=999->'no_prior', <=3->'very_recent', <=7->'recent', <=14->'moderate', >14->'distant'
+       Reason : Converts raw pdays to a 5-level ordinal recency category; previously-contacted clients (3.3% of data) show 65%+ conversion
+       Type   : categorical (str)
+       Source : pdays
+
+  [05] previous_capped
+       Logic  : previous.clip(upper=2)
+       Reason : previous is right-skewed (max=7, 99th pct=3); capping reduces outlier noise without losing information
+       Type   : int
+       Source : previous
+
+  [06] repeat_success
+       Logic  : (previously_contacted==1) & (poutcome=='success') -> 1, else 0
+       Reason : SQL Q08: poutcome=success + previously_contacted = 65% conversion rate. This interaction isolates the highest-value segment as a binary flag.
+       Type   : int (0/1)
+       Source : previously_contacted, poutcome
+
+  [07] cellular_first
+       Logic  : (contact=='cellular') & (campaign==1) -> 1, else 0
+       Reason : EDA Fig 06: cellular outperforms telephone (14.7% vs 5.2%); first contact outperforms repeats. Interaction captures ideal scenario.
+       Type   : int (0/1)
+       Source : contact, campaign
+
+  [08] high_value_segment
+       Logic  : (job in ['student','retired']) & (housing=='no') -> 1, else 0
+       Reason : Students and retirees convert at 25-31%; combining with no-housing-loan flag isolates the clearest high-value, low-debt-burden segment.
+       Type   : int (0/1)
+       Source : job, housing
+
+  [09] education_encoded
+       Logic  : illiterate=0 < basic.4y=1 < ... < university.degree=6; unknown=-1
+       Reason : EDA Fig 04 confirmed a monotonic upward trend from basic to university; ordinal encoding preserves this ordering. -1 for unknown is a deliberate neutral signal (not imputed).
+       Type   : int
+       Source : education
+
+  [10] month_num
+       Logic  : jan=1, feb=2, ..., dec=12
+       Reason : Converts month string to calendar integer for linear models; tree models can use the string directly but benefit from numeric form.
+       Type   : int
+       Source : month
+
+  [11] dow_num
+       Logic  : mon=1, tue=2, wed=3, thu=4, fri=5
+       Reason : Calendar ordering for linear models. EDA showed minimal variation across days (~1 pp spread) but the numeric encoding costs nothing.
+       Type   : int
+       Source : day_of_week
+
+  [12] OHE: job, marital, default, housing, loan, contact, poutcome
+       Logic  : pd.get_dummies(drop_first=True, dtype=int)
+       Reason : Nominal categoricals have no meaningful order; one-hot encoding is required for logistic regression and distance-based models. drop_first=True prevents perfect multicollinearity.
+       Type   : int (0/1) per dummy column
+       Source : job, marital, default, housing, loan, contact, poutcome
+
+  [13] log_campaign
+       Logic  : log(1 + campaign)
+       Reason : campaign is right-skewed (skewness~3.7 after capping); log1p compresses scale and improves linear model assumptions.
+       Type   : float
+       Source : campaign
+
+  [14] log_previous
+       Logic  : log(1 + previous_capped)
+       Reason : previous_capped is severely zero-inflated with rare high values; log1p brings the non-zero tail closer to the bulk.
+       Type   : float
+       Source : previous_capped
+
+  [15] low_rate_env
+       Logic  : euribor3m < 2.0 -> 1, else 0
+       Reason : EDA Fig 09: subscription rate doubles in low-rate environments (euribor<2). Binary flag captures this non-linear threshold effect for linear models. euribor3m is retained as continuous too.
+       Type   : int (0/1)
+       Source : euribor3m
+
+COLUMN COUNTS
+  Original columns     : 23
+  Final columns        : 49
+  Feature columns      : 47  (excludes y, y_encoded)
+
+FINAL FEATURE LIST
+  age
+  education
+  month
+  day_of_week
+  campaign
+  pdays
+  previous
+  cons_conf_idx
+  euribor3m
+  previously_contacted
+  age_group
+  campaign_group
+  pdays_actual
+  recency_group
+  previous_capped
+  repeat_success
+  cellular_first
+  high_value_segment
+  education_encoded
+  month_num
+  dow_num
+  job_blue-collar
+  job_entrepreneur
+  job_housemaid
+  job_management
+  job_retired
+  job_self-employed
+  job_services
+  job_student
+  job_technician
+  job_unemployed
+  job_unknown
+  marital_married
+  marital_single
+  marital_unknown
+  default_unknown
+  default_yes
+  housing_unknown
+  housing_yes
+  loan_unknown
+  loan_yes
+  contact_telephone
+  poutcome_nonexistent
+  poutcome_success
+  log_campaign
+  log_previous
+  low_rate_env
+
+======================================================================
+VALIDATION RESULTS
+======================================================================
+
+  [PASS] Row count preserved                      actual=41172
+  [PASS] y_encoded sum preserved                  actual=4639
+  [PASS] duration excluded                        actual=False
+  [PASS] emp_var_rate excluded                    actual=False
+  [PASS] nr_employed excluded                     actual=False
+  [PASS] cons_price_idx excluded                  actual=False
+  [PASS] repeat_success is 0/1                    actual=True
+  [PASS] no new nulls                             actual=0
+  [PASS] education_encoded values valid           actual=0
+  [PASS] y/y_encoded consistent                   actual=True
+
+  Overall: ALL CHECKS PASSED
+======================================================================

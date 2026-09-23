@@ -1,0 +1,16 @@
+time_dimension,period,total_calls,subscribed,conv_rate_pct,pct_of_calls,conv_percent_rank
+day_of_week,thu,8618,1044,12.11,20.93,100.0
+day_of_week,tue,8084,953,11.79,19.63,75.0
+day_of_week,wed,8134,949,11.67,19.76,50.0
+day_of_week,fri,7825,846,10.81,19.01,25.0
+day_of_week,mon,8511,847,9.95,20.67,0.0
+month,mar,546,276,50.55,1.33,100.0
+month,dec,182,89,48.9,0.44,88.9
+month,sep,570,256,44.91,1.38,77.8
+month,oct,717,315,43.93,1.74,66.7
+month,apr,2630,539,20.49,6.39,55.6
+month,aug,6175,655,10.61,15.0,44.4
+month,jun,5318,559,10.51,12.92,33.3
+month,nov,4100,416,10.15,9.96,22.2
+month,jul,7169,648,9.04,17.41,11.1
+month,may,13765,886,6.44,33.43,0.0

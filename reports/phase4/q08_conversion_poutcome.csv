@@ -1,0 +1,5 @@
+poutcome,previously_contacted,total_clients,subscribed,conv_rate_pct,avg_prior_contacts,pct_of_dataset,conv_index
+success,1,1373,894,65.11,1.57,3.33,1.88
+failure,1,142,73,51.41,2.54,0.34,1.49
+failure,0,4110,532,12.94,1.12,9.98,0.37
+nonexistent,0,35547,3140,8.83,0.0,86.34,0.26

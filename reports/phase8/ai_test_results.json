@@ -1,0 +1,92 @@
+[
+  {
+    "answer": "FACT: The overall campaign subscription rate is 11.27% (4,639 subscribed out of 41,172 total contacts).\nFACT: The class imbalance ratio is 7.9:1 (no:yes).\nINTERPRETATION: This severe imbalance means accuracy alone is not a useful metric — the model could achieve 88.73% accuracy by always predicting 'no'. F1-score and ROC-AUC are the appropriate measures.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "Which customer groups had higher conversion rates?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 1
+  },
+  {
+    "answer": "FACT: Cellular contact achieves 14.74% conversion vs telephone 5.23%.\nFACT: First contact (campaign=1): 13.04% conversion.\nFACT: Conversion drops progressively: 2 contacts=11.46%, 3=10.75%, 4=9.40%, 7+=below 6.1%.\nFACT: March (50.55%), December (48.90%), September (44.91%) are the highest-conversion months.\nFACT: May has the lowest rate (6.44%) despite being the highest-volume month (33.43% of calls).\nINTERPRETATION: Diminishing returns beyond 3 contacts suggests persistent calling alienates rather than convinces. High volume in May likely reflects mass-calling campaigns that dilute lead quality.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What campaign characteristics are associated with better outcomes?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 2
+  },
+  {
+    "answer": "Based on validated analytical findings:\n\n1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.\n2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.\n3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.\n4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.\n5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.\n6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What are the major findings from the analysis?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 3
+  },
+  {
+    "answer": "Based on validated analytical findings:\n\n1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.\n2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.\n3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.\n4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.\n5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.\n6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What should a marketing manager investigate?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 4
+  },
+  {
+    "answer": "FACT: Three models were compared on a held-out test set of 8,235 records:\n  M0 Dummy baseline:  F1=0.1175, ROC-AUC=0.5032, PR-AUC=0.1134\n  M1 Logistic Regression: F1=0.4038, ROC-AUC=0.7820, PR-AUC=0.4129\n  M2 Random Forest: F1=0.4815, ROC-AUC=0.8120, PR-AUC=0.4778 (BEST)\nFACT: Random Forest 5-fold CV F1=0.4625+/-0.0142 — consistent with test result.\nFACT: PR-AUC of 0.4778 is 4.2x the naive baseline of 0.1127.\nINTERPRETATION: The CV-test consistency confirms no overfitting. Random Forest captures non-linear feature interactions (e.g. poutcome × pdays) better than Logistic Regression.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "How did the Random Forest model perform?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 5
+  },
+  {
+    "answer": "FACT: Top features by Pearson |r| with subscription target:\n  pdays / previously_contacted: 0.325\n  repeat_success (interaction): 0.316\n  poutcome_success (OHE):       0.316\n  euribor3m:                    0.308 (negative — lower rate = higher sub)\n  low_rate_env flag:            0.291\n  pdays_actual:                 0.279\n  previous contacts:            0.230\nFACT: 'duration' was excluded from all models — it is a target leakage feature (unknown before the call is made).\nINTERPRETATION: Prior contact history dominates. Economic conditions (euribor) are the second-strongest signal group, confirming macro context strongly influences savings behaviour.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What factors are most predictive of term deposit subscription?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 6
+  },
+  {
+    "answer": "FACT: Cellular contact achieves 14.74% conversion vs telephone 5.23%.\nFACT: First contact (campaign=1): 13.04% conversion.\nFACT: Conversion drops progressively: 2 contacts=11.46%, 3=10.75%, 4=9.40%, 7+=below 6.1%.\nFACT: March (50.55%), December (48.90%), September (44.91%) are the highest-conversion months.\nFACT: May has the lowest rate (6.44%) despite being the highest-volume month (33.43% of calls).\nINTERPRETATION: Diminishing returns beyond 3 contacts suggests persistent calling alienates rather than convinces. High volume in May likely reflects mass-calling campaigns that dilute lead quality.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "Which months are best for running campaigns and why?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 7
+  },
+  {
+    "answer": "FACT: Previous campaign outcome is the strongest categorical predictor:\n  poutcome=success (previously contacted): 65.11% conversion (n=1,373)\n  poutcome=failure (previously contacted): 51.41% conversion (n=142)\n  poutcome=failure (new/not-prev-contacted): 12.94% (n=4,110)\n  poutcome=nonexistent (new client): 8.83% (n=35,547)\nINTERPRETATION: Re-targeting clients with a prior success history should be the top campaign priority. Even failure outcomes show elevated conversion when the client was genuinely contacted previously.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What is the effect of previous campaign outcome on subscription?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 8
+  },
+  {
+    "answer": "FACT: Known limitations of the BankInsight predictive model:\n  1. 'duration' excluded — the single strongest raw correlate but is target leakage (unknown before the call is placed). Including it inflates metrics artificially and makes the model useless in a real campaign setting.\n  2. Dataset scope: 2008-2013 Portuguese bank campaigns during the post-crisis low-rate environment. The macro feature (euribor) may not generalize to different economic periods or regions.\n  3. Default threshold (0.5) not tuned: shifting to ~0.3 would improve recall (catch more subscribers) at the cost of lower precision (more wasted calls).\n  4. Class imbalance (8:1): despite class_weight='balanced', the minority class is still under-represented. F1=0.4815 and PR-AUC=0.4778 are honest metrics; accuracy (~90%) would be misleading.\n  5. 'balance' column: does NOT exist in this dataset (UCI v2). Only UCI v1 contained account balance.\nINTERPRETATION: The model is suitable for ranking call lists by subscription probability, not for making hard yes/no predictions. A human review of high-probability cases is recommended.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "What are the limitations of the predictive model?",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 9
+  },
+  {
+    "answer": "Based on validated analytical findings:\n\n1. RE-TARGET PRIOR SUCCESSES: poutcome=success clients convert at 65.11% — create a priority list of 1,373 such clients.\n2. CAP CONTACTS AT 3: Conversion halves from 13.0% (1st contact) to 6.0% (7th contact). Stop at 3 contacts per campaign cycle.\n3. SWITCH TO CELLULAR: 14.74% vs 5.23% — a 2.8x difference.\n4. AVOID MAY MASS CAMPAIGNS: 6.44% conversion despite 33% of all calls.\n5. TARGET STUDENTS/RETIREES: 31.43% and 25.26% conversion vs 11.27% overall.\n6. USE ML SCORING: Random Forest (ROC-AUC=0.812) can rank call lists by predicted subscription probability to focus agent time on high-probability clients.",
+    "source": "fallback",
+    "model": "rule-based (AI unavailable)",
+    "context_used": true,
+    "question": "Give me an executive summary of the BankInsight project.",
+    "error": "No API key configured. Set OPENAI_API_KEY in .env",
+    "test_num": 10
+  }
+]

@@ -1,0 +1,94 @@
+======================================================================
+BankInsight AI - Phase 3: EDA Report
+======================================================================
+
+DATASET
+  Shape : 41,172 rows x 23 columns
+  Source: data/processed/bank_marketing_clean.csv
+
+FIGURES PRODUCED
+  fig01 : What is the overall campaign subscription rate?
+  fig02 : Which job types have the highest/lowest subscription rates?
+  fig03 : Does client age influence subscription likelihood?
+  fig04 : Does education level predict subscription?
+  fig05 : Do housing/personal loans or marital status affect subscript
+  fig06 : Does contact method or contact frequency affect subscription
+  fig07 : Are certain months or days of week better for campaigns?
+  fig08 : Does previous campaign outcome predict current subscription?
+  fig09 : Do macro-economic conditions drive subscription likelihood?
+  fig10 : Are there multicollinear features that need to be addressed?
+
+FINDINGS DETAIL
+
+[01] FIG01 — What is the overall campaign subscription rate?
+     Evidence       : no=36,533 (88.73%),  yes=4,639 (11.27%)
+     Finding        : Only 11.3% of contacted clients subscribed to a term deposit.
+     Interpretation : Severe class imbalance (8:1). Models must account for this via class weighting or resampling to avoid predicting 'no' for everyone.
+
+[02] FIG02 — Which job types have the highest/lowest subscription rates?
+     Evidence       : Highest: student (31.4%),  Lowest: blue-collar (6.9%)
+     Finding        : Students (31.4%) and retired clients show the highest conversion; blue-collar (6.9%) and services workers the lowest.
+     Interpretation : Students and retirees may have more disposable savings and less financial urgency, making term deposits more attractive. Targeting campaigns toward these segments could improve ROI.
+
+[03] FIG03 — Does client age influence subscription likelihood?
+     Evidence       : Highest conversion band: 66+ (46.9%); subscribed median age 37 vs non-subscribed 38
+     Finding        : The 66+ age group has the highest conversion (46.9%). The KDE shows subscribed clients skew slightly older.
+     Interpretation : Younger (18-25) and older (66+) clients convert better than the core working age 36-55 bracket. Younger clients may be in early savings mode; older clients may have capital to deploy. Mid-career clients have more competing financial priorities.
+
+[04] FIG04 — Does education level predict subscription?
+     Evidence       : Highest conversion: illiterate (22.2%); university.degree=13.7% vs basic.4y=10.2%
+     Finding        : University degree holders and the 'illiterate' category have the highest conversion rates. There is a general upward trend from basic to higher education.
+     Interpretation : Higher education correlates with higher subscription rates, likely reflecting greater financial literacy and awareness of term deposit benefits.
+
+[05] FIG05 — Do housing/personal loans or marital status affect subscription?
+     Evidence       : housing loan: no=10.9%, yes=11.6%; single marital: 14.0%
+     Finding        : Clients without a housing loan convert at nearly double the rate of those with one. Single clients convert slightly higher than married/divorced.
+     Interpretation : Existing debt obligations reduce willingness/ability to lock money in a term deposit. Clients with no housing loan have higher disposable savings.
+
+[06] FIG06 — Does contact method or contact frequency affect subscription?
+     Evidence       : cellular=14.7%, telephone=5.2%; first contact rate=13.0%
+     Finding        : Cellular contact yields 14.7% vs telephone 5.2%. Subscription rate drops steeply after the 1st contact and is lowest at high contact counts.
+     Interpretation : Clients reachable by mobile phone are likely more responsive. Repeated calls show diminishing — then negative — returns; persistent calling may cause disengagement. 1-2 contacts is optimal.
+
+[07] FIG07 — Are certain months or days of week better for campaigns?
+     Evidence       : Best month: mar (50.5%), Worst: may (6.4%); Best day: thu (12.1%)
+     Finding        : March, September, October and December have the highest conversion rates (>20%), while May has the lowest despite being the highest-volume month. Day-of-week differences are minor (~1 pp spread).
+     Interpretation : The inverse relationship between call volume and conversion in May suggests mass-calling campaigns sacrifice quality. Low-volume months (Mar, Sep-Dec) likely target more qualified leads. Day of week has negligible impact.
+
+[08] FIG08 — Does previous campaign outcome predict current subscription?
+     Evidence       : poutcome=success: 65.1%, nonexistent: 8.8%; previously contacted: 63.8% vs new: 9.3%
+     Finding        : Clients who subscribed in a previous campaign convert at 65.1% — nearly 3x the overall rate. Previously contacted clients (63.8%) also outperform never-contacted clients (9.3%).
+     Interpretation : Past behaviour is the strongest single categorical predictor. Retargeting clients with a prior 'success' outcome should be the highest-priority segment for any new campaign.
+
+[09] FIG09 — Do macro-economic conditions drive subscription likelihood?
+     Evidence       : Pearson r: emp_var_rate=-0.298, euribor3m=-0.308, cons_conf_idx=0.055
+     Finding        : Lower employment variation rates and lower Euribor rates are strongly associated with higher subscription rates. Consumer confidence shows a positive relationship.
+     Interpretation : During periods of low interest rates and economic contraction (negative emp_var_rate), clients are more likely to lock savings in term deposits, possibly seeking security. This aligns with the 2008-2012 post-crisis banking context of this dataset.
+
+[10] FIG10 — Are there multicollinear features that need to be addressed?
+     Evidence       : High correlations (|r|>0.7): cons_price_idx/emp_var_rate=0.78; euribor3m/emp_var_rate=0.97; nr_employed/emp_var_rate=0.91; nr_employed/euribor3m=0.95
+     Finding        : Strong multicollinearity exists among emp_var_rate, euribor3m, nr_employed, and cons_price_idx — all macro indicators that move together.
+     Interpretation : These collinear features carry redundant information. For linear models, only one or two should be retained (e.g. euribor3m). Tree-based models are less sensitive but feature importance may be diluted.
+
+======================================================================
+SUMMARY OF KEY INSIGHTS
+======================================================================
+
+1. CLASS IMBALANCE  : 11.3% positive class. Must handle in modelling.
+2. TOP SEGMENTS     : Students, retirees, and university-educated clients
+                       subscribe at above-average rates.
+3. DEBT BURDEN      : Housing loan holders convert at nearly half the rate
+                       of clients without one.
+4. CONTACT METHOD   : Cellular significantly outperforms telephone.
+5. CONTACT FREQUENCY: First contact is optimal; conversion drops with repeats.
+6. PRIOR SUCCESS    : Clients with a previous 'success' outcome convert at
+                       ~3x the overall rate — highest-value retarget segment.
+7. TEMPORAL         : March, Sep, Oct, Dec are high-conversion months;
+                       May is high-volume but low-conversion.
+8. MACRO CONDITIONS : Low interest rates (Euribor, emp_var_rate) correlate
+                       with higher subscription — economic context matters.
+9. MULTICOLLINEARITY: emp_var_rate, euribor3m, nr_employed, cons_price_idx
+                       are highly correlated; reduce before linear modelling.
+10.LEAKAGE REMINDER : 'duration' must NOT be used as a model feature.
+
+======================================================================

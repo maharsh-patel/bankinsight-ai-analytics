@@ -1,0 +1,6 @@
+duration_bucket,total_clients,subscribed,conv_rate_pct,pct_of_calls
+< 1 min,4175,1,0.02,10.14
+1-3 min,16400,557,3.4,39.83
+3-5 min,9349,950,10.16,22.71
+5-10 min,7770,1441,18.55,18.87
+> 10 min,3478,1690,48.59,8.45

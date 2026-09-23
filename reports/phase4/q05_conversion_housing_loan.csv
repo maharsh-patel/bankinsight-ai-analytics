@@ -1,0 +1,10 @@
+dimension,category,total_clients,subscribed,conv_rate_pct
+credit_default,no,32573,4196,12.88
+credit_default,unknown,8596,443,5.15
+credit_default,yes,3,0,0.0
+housing,yes,21568,2507,11.62
+housing,no,18614,2025,10.88
+housing,unknown,990,107,10.81
+loan,no,33934,3849,11.34
+loan,yes,6248,683,10.93
+loan,unknown,990,107,10.81

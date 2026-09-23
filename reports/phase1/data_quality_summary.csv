@@ -1,0 +1,15 @@
+check,finding,severity,recommendation
+Structural nulls,0 null cells,None,No action needed for structural nulls
+Exact duplicate rows,12 duplicates,Medium,Inspect and remove if confirmed true duplicates in Phase 3
+'unknown' in 'housing',990 rows (2.4%),Medium,Impute or treat as separate category in Phase 3
+'unknown' in 'default',8597 rows (20.87%),High,Impute or treat as separate category in Phase 3
+'unknown' in 'loan',990 rows (2.4%),Medium,Impute or treat as separate category in Phase 3
+'unknown' in 'job',330 rows (0.8%),Low,Impute or treat as separate category in Phase 3
+'unknown' in 'education',1731 rows (4.2%),Medium,Impute or treat as separate category in Phase 3
+'unknown' in 'marital',80 rows (0.19%),Low,Impute or treat as separate category in Phase 3
+duration == 0,4 rows,Low,"Consider dropping; call never happened, target is always 'no'"
+pdays == 999 sentinel,"39,673 rows (96.3%)",Medium,Engineer binary 'was_previously_contacted' flag in Phase 3
+Class imbalance (target y),"no=36,548 yes=4,640 ratio≈7.9:1",High,"Use stratified splits, class-weight or SMOTE in Phase 4"
+duration — target leakage risk,duration is unknown at call time; highly correlated with outcome,High,Exclude 'duration' from predictive model features in Phase 3/4
+campaign outliers (>99th pct),406 rows,Low,Cap or log-transform in Phase 3
+Socio-economic feature cardinality,Low unique counts (macro indicators constant per campaign period),Low,Treat as continuous; check multicollinearity in Phase 3

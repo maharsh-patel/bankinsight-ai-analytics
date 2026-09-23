@@ -1,0 +1,13 @@
+rank_by_conv,job,total_clients,subscribed,conv_rate_pct,pct_of_dataset,conversion_tier
+1,student,875,275,31.43,2.13,HIGH
+2,retired,1718,434,25.26,4.17,HIGH
+3,unemployed,1014,144,14.2,2.46,AVERAGE
+4,admin.,10418,1351,12.97,25.3,AVERAGE
+5,management,2923,328,11.22,7.1,AVERAGE
+6,unknown,330,37,11.21,0.8,AVERAGE
+7,technician,6739,730,10.83,16.37,AVERAGE
+8,self-employed,1421,149,10.49,3.45,AVERAGE
+9,housemaid,1060,106,10.0,2.57,AVERAGE
+10,entrepreneur,1456,124,8.52,3.54,LOW
+11,services,3967,323,8.14,9.64,LOW
+12,blue-collar,9251,638,6.9,22.47,LOW

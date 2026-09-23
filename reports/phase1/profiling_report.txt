@@ -1,0 +1,89 @@
+======================================================================
+BankInsight AI - Phase 1: Dataset Profiling Report
+======================================================================
+
+DATASET DIMENSIONS
+  Rows    : 41,188
+  Columns : 21
+
+COLUMN TYPES
+  Numerical  (10): age, duration, campaign, pdays, previous, emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m, nr.employed
+  Categorical(11): job, marital, education, default, housing, loan, contact, month, day_of_week, poutcome, y
+
+MISSING / NULL VALUES
+  Total null cells : 0
+  (No structural nulls detected — 'unknown' is encoded as a string label)
+
+DUPLICATE RECORDS
+  Exact-duplicate rows : 12
+
+UNIQUE VALUES PER COLUMN
+  age                 :     78
+  job                 :     12
+  marital             :      4
+  education           :      8
+  default             :      3
+  housing             :      3
+  loan                :      3
+  contact             :      2
+  month               :     10
+  day_of_week         :      5
+  duration            :  1,544
+  campaign            :     42
+  pdays               :     27
+  previous            :      8
+  poutcome            :      3
+  emp.var.rate        :     10
+  cons.price.idx      :     26
+  cons.conf.idx       :     26
+  euribor3m           :    316
+  nr.employed         :     11
+  y                   :      2
+
+CATEGORICAL COLUMN - ALL UNIQUE VALUES
+  job                 : ['admin.', 'blue-collar', 'entrepreneur', 'housemaid', 'management', 'retired', 'self-employed', 'services', 'student', 'technician', 'unemployed', 'unknown']
+  marital             : ['divorced', 'married', 'single', 'unknown']
+  education           : ['basic.4y', 'basic.6y', 'basic.9y', 'high.school', 'illiterate', 'professional.course', 'university.degree', 'unknown']
+  default             : ['no', 'unknown', 'yes']
+  housing             : ['no', 'unknown', 'yes']
+  loan                : ['no', 'unknown', 'yes']
+  contact             : ['cellular', 'telephone']
+  month               : ['apr', 'aug', 'dec', 'jul', 'jun', 'mar', 'may', 'nov', 'oct', 'sep']
+  day_of_week         : ['fri', 'mon', 'thu', 'tue', 'wed']
+  poutcome            : ['failure', 'nonexistent', 'success']
+  y                   : ['no', 'yes']
+
+TARGET VARIABLE  (y - term deposit subscription)
+  'no'  : 36,548  (88.73%)
+  'yes' :  4,640  (11.27%)
+  Imbalance ratio (no:yes) approx 7.9:1
+
+DATE / TIME FIELDS
+  No explicit date/timestamp columns.
+  'month' and 'day_of_week' encode campaign contact time as string categories.
+
+SUSPICIOUS / INVALID VALUES
+  duration == 0         : 4 rows  (call never happened — target leakage risk if duration kept)
+  pdays == 999 sentinel : 39,673 rows  (96.3% — means 'not previously contacted')
+  campaign > 99th pct   : 406 rows  (extreme contact frequency)
+  age > 80              : 119 rows  (plausible but sparse)
+
+'unknown' STRING-LABEL COUNTS (proxy missing values)
+  housing             :   990  (2.40%)
+  default             : 8,597  (20.87%)
+  loan                :   990  (2.40%)
+  job                 :   330  (0.80%)
+  education           : 1,731  (4.20%)
+  marital             :    80  (0.19%)
+
+SOCIO-ECONOMIC FEATURES NOTE
+  emp.var.rate, cons.price.idx, cons.conf.idx, euribor3m, nr.employed
+  are time-varying macro indicators. Within this dataset they take a
+  limited number of distinct values (one per campaign period).
+  emp.var.rate        : 10 unique values
+  cons.price.idx      : 26 unique values
+  cons.conf.idx       : 26 unique values
+  euribor3m           : 316 unique values
+  nr.employed         : 11 unique values
+
+======================================================================

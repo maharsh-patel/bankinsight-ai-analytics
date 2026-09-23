@@ -1,0 +1,9 @@
+check,sql_val,py_val,passed
+Total row count,41172.0,41172.0,PASS
+Subscription rate %,11.27,11.27,PASS
+Student conv rate %,31.43,31.43,PASS
+Cellular contact count,26132.0,26132.0,PASS
+poutcome=success conv %,65.11,65.11,PASS
+Avg call duration (sec),258.34,258.34,PASS
+duration=0 rows (must be 0),0.0,0.0,PASS
+Duplicate rows in DB (must be 0),0.0,0.0,PASS

@@ -1,0 +1,141 @@
+BankInsight AI — Phase 8: AI Analytics Architecture
+=====================================================
+
+1. OVERVIEW
+-----------
+The AI layer provides natural-language Q&A over the validated analytical
+outputs of the BankInsight project. It is designed around a strict principle:
+the AI cannot invent numbers — it can only reason about facts we supply.
+
+2. COMPONENTS
+-------------
+
+  src/phase8_ai_context.py   — Context Builder
+    Reads all validated project CSVs (reports/phase4/, reports/phase6/) and
+    assembles a ~1,700-token structured factual document. This is the single
+    source of truth injected into every AI prompt. Rebuilt on each call;
+    takes <0.5 seconds.
+
+  src/phase8_ai_engine.py    — Query Engine
+    - ai_available()   : checks if OPENAI_API_KEY is set (no network call)
+    - ask(q, context)  : sends question + context to OpenAI Chat Completions
+                         with retry logic (rate limits, transient errors)
+    - fallback_answer(): keyword-based routing to 9 validated answer buckets
+                         when AI is unavailable
+    Config: loaded entirely from .env via python-dotenv. No hardcoded keys.
+
+  src/phase8_ai_server.py    — HTTP API Server
+    Lightweight Python HTTPServer (no Flask/Django dependency).
+    Endpoints:
+      GET  /           -> serves dashboard/index.html
+      GET  /api/ping   -> { "status": "ok", "ai_available": bool }
+      POST /api/ask    -> { "question": "..." } -> { "answer", "source", "model" }
+    CORS enabled for same-host dashboard fetch calls.
+
+  src/phase8_test.py         — Test Harness
+    Runs 10 questions covering all analytical domains.
+    Works in both LIVE (OpenAI) and FALLBACK (rule-based) modes.
+    Saves results to reports/phase8/.
+
+  dashboard/index.html       — AI Chat Panel (Section 7)
+    Chip buttons for suggested questions.
+    Free-text input with Enter-key support.
+    Shows "thinking" state, source label (AI vs Fallback), and error messages.
+    Gracefully disables if server is not running.
+
+3. CONTEXT DOCUMENT STRUCTURE
+------------------------------
+The context injected into every prompt contains:
+  - Dataset dimensions and target distribution (from SQL Q01)
+  - Customer conversion by job, education, marital (from SQL Q02-Q04)
+  - Debt profile: housing/loan/default (from SQL Q05)
+  - Campaign analytics: contact method, frequency, temporal (SQL Q06-Q07, Q11)
+  - Previous campaign outcome data (SQL Q08)
+  - Call duration analysis (SQL Q09)
+  - Top customer segments (SQL Q10)
+  - Feature engineering decisions and top correlations (Phase 5)
+  - ML model results: all 3 models, CV + test, confusion matrices (Phase 6)
+  - Known limitations of the model and dataset
+
+4. SYSTEM PROMPT DESIGN
+------------------------
+The system prompt enforces:
+  1. Only cite numbers present verbatim in the context
+  2. Label FACT: (from context) vs INTERPRETATION: (analytical reasoning)
+  3. Explicitly say "not in context" if asked about unavailable data
+  4. Always cite both F1 and ROC-AUC when discussing model performance
+  5. Never reference 'balance' (not in UCI v2 dataset)
+  6. Explain why accuracy is misleading (8:1 class imbalance)
+
+5. FALLBACK BEHAVIOUR
+---------------------
+When OPENAI_API_KEY is absent or API calls fail:
+  - A keyword classifier routes the question to one of 9 answer buckets
+  - Each bucket contains verified facts + interpretations written from
+    the same validated data
+  - All fallback answers distinguish FACT: from INTERPRETATION:
+  - The source is clearly labeled [FALLBACK] in all interfaces
+  - Error reason is included in CLI output
+
+Fallback categories:
+  conversion_rate     — overall subscription stats
+  customer_groups     — job, education, marital, age breakdown
+  campaign            — contact method, frequency, month patterns
+  model               — ML model results and comparison
+  model_limitations   — known limitations and caveats
+  poutcome            — previous campaign outcome analysis
+  recommendations     — 6 actionable business recommendations
+  features            — feature importance and engineering decisions
+  default             — topic listing for unrecognized questions
+
+6. ERROR HANDLING
+-----------------
+  - Rate limits (429): exponential backoff, retry up to AI_MAX_RETRIES
+  - Auth/billing errors: no retry, immediate fallback
+  - Network timeout: falls back silently
+  - Dashboard: shows error message inline; never crashes
+  - Server: returns HTTP 400 for missing question, 404 for unknown paths
+
+7. CONFIGURATION (.env)
+-----------------------
+  OPENAI_API_KEY    — required for live AI mode
+  OPENAI_MODEL      — default: gpt-4o-mini
+  OPENAI_BASE_URL   — optional: Azure OpenAI endpoint
+  OPENAI_API_VERSION— optional: Azure API version
+  AI_MAX_TOKENS     — default: 1200
+  AI_TEMPERATURE    — default: 0.3 (low = more factual)
+  AI_TIMEOUT_SEC    — default: 30
+  AI_MAX_RETRIES    — default: 2
+
+8. SECURITY
+-----------
+  - API key loaded from .env, never hardcoded
+  - .env listed in .gitignore (not committed)
+  - .env.example provided with placeholder value
+  - Server binds to localhost only (no external exposure)
+
+9. LIMITATIONS
+--------------
+  - Fallback classifier is keyword-based; complex/ambiguous questions
+    may route to a non-ideal answer bucket
+  - Context is ~1,700 tokens; very long multi-turn conversations are
+    not supported (single-turn Q&A only)
+  - AI mode requires an active OpenAI account with available quota
+  - Model may occasionally hallucinate despite context constraints —
+    all answers should be verified against the reports/ directory
+  - No streaming responses; UI shows "thinking" state while waiting
+
+10. HOW TO USE
+--------------
+  # Generate / update data context
+  python src/phase7_dashboard_data.py
+
+  # Start the AI + dashboard server
+  python src/phase8_ai_server.py
+
+  # Run tests
+  python src/phase8_test.py
+  python src/phase8_test.py --question "What are the top customer segments?"
+
+  # Live AI requires .env with:
+  # OPENAI_API_KEY=sk-...
