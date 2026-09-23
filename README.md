@@ -410,6 +410,31 @@ python -m pytest -v --tb=short
 
 ---
 
-## 26. Dataset Attribution
+## 26. Platform Screenshots
+
+### Dashboard Overview
+![Dashboard Overview - KPI Summary](./Screenshot/Screenshot%202026-09-23%20231633.png)
+
+### Interactive Analytics & Charts
+![Analytics View 1](./Screenshot/Screenshot%202026-09-23%20231651.png)
+
+### Demographic Conversion Analysis
+![Demographic Analysis](./Screenshot/Screenshot%202026-09-23%20231706.png)
+
+### Customer Segment Insights
+![Segment Analysis](./Screenshot/Screenshot%202026-09-23%20231719.png)
+
+### Campaign Contact Frequency Impact
+![Campaign Frequency](./Screenshot/Screenshot%202026-09-23%20231736.png)
+
+### Model Performance Comparison
+![Model Metrics](./Screenshot/Screenshot%202026-09-23%20231755.png)
+
+### AI Chat Assistant Interface
+![AI Chat Assistant](./Screenshot/Screenshot%202026-09-23%20231915.png)
+
+---
+
+## 27. Dataset Attribution
 
 S. Moro, P. Cortez and P. Rita. *A Data-Driven Approach to Predict the Success of Bank Telemarketing.* Decision Support Systems, Elsevier, 62:22-31, June 2014. Available via the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing).

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BankInsight AI — Project Report</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Print & Page Setup ─────────────────────────────────── */
+@page {
+  size: A4;
+  margin: 18mm 15mm 18mm 15mm;
+}
+@media print {
+  body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .page-break { page-break-before: always; }
+  .no-break { page-break-inside: avoid; }
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  color: #1e293b;
+  background: #fff;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 10mm 6mm;
+}
+
+/* ── Cover Page ──────────────────────────────────────────── */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  text-align: center;
+  padding: 40px 20px;
+}
+.cover .logo-icon {
+  font-size: 72px;
+  margin-bottom: 10px;
+}
+.cover h1 {
+  font-size: 32pt;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.cover .subtitle {
+  font-size: 14pt;
+  color: #64748b;
+  font-weight: 400;
+  margin-bottom: 36px;
+  max-width: 500px;
+}
+.cover-meta {
+  margin-top: 30px;
+  font-size: 11pt;
+  color: #475569;
+  line-height: 2;
+}
+.cover-meta strong { color: #1e293b; }
+.cover-divider {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  border-radius: 2px;
+  margin: 24px auto;
+}
+.cover-badge {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 6px 18px;
+  border: 2px solid #2563eb;
+  border-radius: 20px;
+  font-size: 10pt;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* ── Section Headers ─────────────────────────────────────── */
+h2 {
+  font-size: 16pt;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 28px 0 10px 0;
+  padding-bottom: 6px;
+  border-bottom: 3px solid #2563eb;
+  display: inline-block;
+}
+h3 {
+  font-size: 12pt;
+  font-weight: 600;
+  color: #334155;
+  margin: 18px 0 8px 0;
+}
+h4 {
+  font-size: 11pt;
+  font-weight: 600;
+  color: #475569;
+  margin: 12px 0 6px 0;
+}
+
+/* ── Body Text ───────────────────────────────────────────── */
+p { margin-bottom: 8px; }
+ul, ol { margin: 6px 0 10px 20px; }
+li { margin-bottom: 4px; }
+
+/* ── Tables ──────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 16px 0;
+  font-size: 9.5pt;
+}
+th {
+  background: #1e293b;
+  color: #fff;
+  font-weight: 600;
+  padding: 7px 10px;
+  text-align: left;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+tr:nth-child(even) td { background: #f8fafc; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.highlight-row td { background: #dbeafe !important; font-weight: 600; }
+
+/* ── KPI Cards ───────────────────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 14px 0;
+}
+.kpi {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.kpi .kpi-val {
+  font-size: 20pt;
+  font-weight: 700;
+  color: #2563eb;
+}
+.kpi .kpi-label {
+  font-size: 8pt;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin-top: 2px;
+}
+
+/* ── Figure Containers ───────────────────────────────────── */
+.fig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 12px 0;
+}
+.fig-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.fig-card img {
+  width: 100%;
+  display: block;
+}
+.fig-card .fig-caption {
+  font-size: 8.5pt;
+  color: #64748b;
+  padding: 6px 10px;
+  background: #f8fafc;
+  text-align: center;
+  font-weight: 500;
+}
+.fig-full {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.fig-full img {
+  width: 100%;
+  display: block;
+}
+.fig-full .fig-caption {
+  font-size: 8.5pt;
+  color: #64748b;
+  padding: 6px 10px;
+  background: #f8fafc;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ── Code Blocks ─────────────────────────────────────────── */
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+  background: #f1f5f9;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9.5pt;
+}
+pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 9pt;
+  overflow-x: auto;
+  margin: 10px 0 14px 0;
+  line-height: 1.5;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* ── Architecture Box ────────────────────────────────────── */
+.arch-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  font-family: 'Consolas', monospace;
+  font-size: 9pt;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── Info Box ────────────────────────────────────────────── */
+.info-box {
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  margin: 10px 0;
+  font-size: 10pt;
+}
+
+/* ── TOC ─────────────────────────────────────────────────── */
+.toc {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin: 16px 0;
+}
+.toc h3 { margin-top: 0; color: #1e293b; }
+.toc ol { margin-left: 16px; }
+.toc li {
+  padding: 3px 0;
+  font-size: 10.5pt;
+  color: #334155;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.doc-footer {
+  margin-top: 30px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 9pt;
+  color: #94a3b8;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COVER PAGE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="logo-icon">🏦</div>
+  <h1>BankInsight AI</h1>
+  <p class="subtitle">Customer Term Deposit Subscription Analytics & AI-Powered Decision Platform</p>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <strong>Internship Project Report</strong><br/>
+    IBM Skills Build — Data Analytics & AI<br/><br/>
+    <strong>Prepared by:</strong> Maharsh Patel<br/>
+    <strong>Institution:</strong> UVPCE<br/>
+    <strong>Date:</strong> September 2026<br/><br/>
+    <strong>GitHub Repository:</strong><br/>
+    <a href="https://github.com/maharsh-patel/bankinsight-ai-analytics" style="color:#2563eb;">
+      github.com/maharsh-patel/bankinsight-ai-analytics
+    </a>
+  </div>
+  <div class="cover-badge">End-to-End Data Science Project</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li>Project Overview</li>
+    <li>Problem Statement</li>
+    <li>Objectives</li>
+    <li>Dataset & Source</li>
+    <li>Data Understanding & Profiling (Phase 1)</li>
+    <li>Data Cleaning Methodology (Phase 2)</li>
+    <li>Exploratory Data Analysis — EDA (Phase 3)</li>
+    <li>SQL Analytics Engine (Phase 4)</li>
+    <li>Feature Engineering (Phase 5)</li>
+    <li>Machine Learning Methodology (Phase 6)</li>
+    <li>Model Evaluation Results</li>
+    <li>Explainability — Feature Importances</li>
+    <li>AI Query Engine & Fallback (Phase 8)</li>
+    <li>Interactive Dashboard (Phase 7 & 9)</li>
+    <li>System Architecture</li>
+    <li>Technology Stack</li>
+    <li>Project Structure</li>
+    <li>Installation & Run Instructions</li>
+    <li>Testing & Validation (Phase 10)</li>
+    <li>Limitations</li>
+    <li>Future Scope</li>
+    <li>Dataset Attribution & References</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. PROJECT OVERVIEW
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<h2>1. Project Overview</h2>
+<p>
+  <strong>BankInsight AI</strong> is an end-to-end data analytics, machine learning, and AI-assisted decision
+  platform built on the <em>UCI Bank Marketing dataset</em> (41,172 cleaned client records from 2008–2013).
+  It integrates automated data profiling, cleaning, an analytical SQLite engine with 12 SQL query modules,
+  target-leakage-free machine learning pipelines, explainable AI feature importances, a context-grounded
+  LLM Q&A engine with zero-hallucination rule-based fallback, and a production-ready interactive web dashboard.
+</p>
+<p>
+  The platform empowers financial marketing managers to optimise direct telemarketing campaigns for term deposit
+  subscriptions by identifying high-conversion customer profiles, predicting subscription propensity, and
+  providing AI-driven conversational insights grounded exclusively in validated analytical findings.
+</p>
+
+<!-- Key Metrics KPI Cards -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="kpi-val">41,172</div>
+    <div class="kpi-label">Client Records</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">4,639</div>
+    <div class="kpi-label">Subscriptions</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">11.27%</div>
+    <div class="kpi-label">Conversion Rate</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">7.9 : 1</div>
+    <div class="kpi-label">Class Imbalance</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. PROBLEM STATEMENT
+     ═══════════════════════════════════════════════════════════ -->
+<h2>2. Problem Statement</h2>
+<p>
+  Direct telemarketing campaigns incur high operational call costs, with a low baseline conversion rate of
+  only <strong>11.27%</strong> and a severe class imbalance of <strong>7.9:1</strong> (non-subscribers per subscriber).
+  Calling all clients indiscriminately wastes resources and alienates leads through persistent over-contacting.
+</p>
+<p>
+  Furthermore, naive machine learning approaches suffer from <strong>target leakage</strong> by including call
+  <code>duration</code> — a variable that is unknown prior to making a call and is therefore unavailable at
+  prediction time. BankInsight AI addresses these challenges by identifying high-conversion customer segments,
+  enforcing target leakage prevention, delivering predictive lead-scoring models, and providing AI-driven
+  decision support.
+</p>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. OBJECTIVES
+     ═══════════════════════════════════════════════════════════ -->
+<h2>3. Objectives</h2>
+<ol>
+  <li><strong>Automated Profiling & Quality Audit</strong> — Inspect 21 raw columns, generate schema dictionaries, and assess data quality.</li>
+  <li><strong>Data Cleaning</strong> — Remove duplicate records, drop non-contact noise (<code>duration = 0</code>), and standardise categorical values.</li>
+  <li><strong>Exploratory Data Analysis (EDA)</strong> — Identify demographic, campaign, and macro-economic conversion drivers through 10 analytical visualisations.</li>
+  <li><strong>SQL Analytics Engine</strong> — Build a relational SQLite database (<code>bankinsight.db</code>) and run 12 validated SQL analytics queries.</li>
+  <li><strong>Leakage-Free Feature Engineering</strong> — Exclude <code>duration</code> and collinear macro indicators; engineer 16 new features from domain knowledge.</li>
+  <li><strong>Supervised ML Classification</strong> — Train and compare Baseline, Logistic Regression, and Random Forest models with stratified cross-validation.</li>
+  <li><strong>Explainable AI (XAI)</strong> — Quantify top predictive features influencing customer subscription decisions.</li>
+  <li><strong>Grounded AI Q&A Engine</strong> — Provide natural-language answers backed strictly by validated analytical findings.</li>
+  <li><strong>Interactive Web Dashboard</strong> — Serve an executive web dashboard with dynamic charts and an embedded AI Chat Assistant.</li>
+  <li><strong>Testing & Validation</strong> — Automated test suite covering data, SQL, ML, AI, dashboard, edge cases, and code quality.</li>
+</ol>
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. DATASET & SOURCE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>4. Dataset & Source</h2>
+
+<table>
+  <tr><th>Attribute</th><th>Details</th></tr>
+  <tr><td><strong>Name</strong></td><td>UCI Bank Marketing Dataset (v2 / <code>bank-additional-full.csv</code>)</td></tr>
+  <tr><td><strong>Origin</strong></td><td>Direct marketing campaigns of a Portuguese banking institution (2008–2013)</td></tr>
+  <tr><td><strong>Raw Size</strong></td><td>41,188 rows × 21 columns</td></tr>
+  <tr><td><strong>Cleaned Size</strong></td><td>41,172 rows × 22 columns (12 duplicates + 4 zero-duration dropped)</td></tr>
+  <tr><td><strong>Target Variable</strong></td><td><code>y</code> — Has the client subscribed a term deposit? (yes / no)</td></tr>
+  <tr><td><strong>Class Distribution</strong></td><td>No: 36,533 (88.73%) | Yes: 4,639 (11.27%)</td></tr>
+  <tr><td><strong>Source File</strong></td><td><code>bank_marketing.csv</code></td></tr>
+</table>
+
+<h3>4.1 Feature Summary (21 Original Columns)</h3>
+<table>
+  <tr><th>Category</th><th>Feature</th><th>Type</th><th>Description</th></tr>
+  <tr><td rowspan="7"><strong>Client</strong></td><td>age</td><td>Integer</td><td>Client age in years</td></tr>
+  <tr><td>job</td><td>Categorical</td><td>Type of job (12 categories)</td></tr>
+  <tr><td>marital</td><td>Categorical</td><td>Marital status (married, single, divorced, unknown)</td></tr>
+  <tr><td>education</td><td>Categorical</td><td>Highest education level (8 categories)</td></tr>
+  <tr><td>default</td><td>Categorical</td><td>Has credit in default? (yes/no/unknown)</td></tr>
+  <tr><td>housing</td><td>Categorical</td><td>Has housing loan? (yes/no/unknown)</td></tr>
+  <tr><td>loan</td><td>Categorical</td><td>Has personal loan? (yes/no/unknown)</td></tr>
+  <tr><td rowspan="7"><strong>Campaign</strong></td><td>contact</td><td>Categorical</td><td>Communication mode (cellular/telephone)</td></tr>
+  <tr><td>month</td><td>Categorical</td><td>Last contact month</td></tr>
+  <tr><td>day_of_week</td><td>Categorical</td><td>Last contact day of week</td></tr>
+  <tr><td>duration</td><td>Integer</td><td>Last contact duration in seconds (<em>Excluded from ML</em>)</td></tr>
+  <tr><td>campaign</td><td>Integer</td><td>Number of contacts during this campaign</td></tr>
+  <tr><td>pdays</td><td>Integer</td><td>Days since previous contact (999 = not contacted)</td></tr>
+  <tr><td>previous</td><td>Integer</td><td>Number of contacts before this campaign</td></tr>
+  <tr><td rowspan="1"><strong>Previous</strong></td><td>poutcome</td><td>Categorical</td><td>Outcome of previous campaign</td></tr>
+  <tr><td rowspan="4"><strong>Macro</strong></td><td>emp.var.rate</td><td>Float</td><td>Employment variation rate (quarterly)</td></tr>
+  <tr><td>cons.price.idx</td><td>Float</td><td>Consumer price index (monthly)</td></tr>
+  <tr><td>cons.conf.idx</td><td>Float</td><td>Consumer confidence index (monthly)</td></tr>
+  <tr><td>euribor3m</td><td>Float</td><td>Euribor 3-month rate (daily)</td></tr>
+  <tr><td rowspan="1"><strong>Macro</strong></td><td>nr.employed</td><td>Float</td><td>Number of employees (quarterly)</td></tr>
+  <tr><td><strong>Target</strong></td><td>y</td><td>Binary</td><td>Term deposit subscription (yes = 1, no = 0)</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. DATA PROFILING (Phase 1)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>5. Data Understanding & Profiling (Phase 1)</h2>
+<p>
+  Phase 1 performs automated inspection of all 21 raw columns, generating a data dictionary, descriptive statistics,
+  target distribution analysis, and a data quality summary report.
+</p>
+<h3>Key Profiling Findings</h3>
+<ul>
+  <li><strong>Zero null values</strong> in any column — "missing" data is encoded as the string <code>"unknown"</code> in 6 categorical columns.</li>
+  <li><strong>12 exact duplicate row pairs</strong> identified (identical across all 21 columns).</li>
+  <li><strong>4 rows</strong> with <code>duration == 0</code> (call never happened; all have <code>y = no</code>).</li>
+  <li><strong>pdays sentinel</strong>: 96.3% of values are <code>999</code> (never previously contacted).</li>
+  <li><strong>Target distribution</strong>: Severe imbalance — 88.73% "no" vs 11.27% "yes".</li>
+</ul>
+<h3>Outputs</h3>
+<ul>
+  <li><code>reports/phase1/data_dictionary.csv</code></li>
+  <li><code>reports/phase1/profiling_report.txt</code></li>
+  <li><code>reports/phase1/descriptive_stats.csv</code></li>
+  <li><code>reports/phase1/target_distribution.csv</code></li>
+  <li><code>reports/phase1/data_quality_summary.csv</code></li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════════════════
+     6. DATA CLEANING (Phase 2)
+     ═══════════════════════════════════════════════════════════ -->
+<h2>6. Data Cleaning Methodology (Phase 2)</h2>
+<p>
+  A reproducible 14-step cleaning pipeline transforms <code>bank_marketing.csv</code> (41,188 rows)
+  into <code>bank_marketing_clean.csv</code> (41,172 rows). The raw CSV is <strong>never modified</strong>.
+</p>
+
+<table>
+  <tr><th>Step</th><th>Rule</th><th>Decision</th><th>Rows Before</th><th>Rows After</th><th>Removed</th></tr>
+  <tr><td class="num">2</td><td>Remove exact duplicates</td><td>Drop 2nd copy, keep first</td><td class="num">41,188</td><td class="num">41,176</td><td class="num">12</td></tr>
+  <tr><td class="num">3</td><td>Drop duration == 0</td><td>Remove non-contact records</td><td class="num">41,176</td><td class="num">41,172</td><td class="num">4</td></tr>
+  <tr><td class="num">4</td><td>Fix dtypes + add y_encoded</td><td>Cast categories to lowercase str</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+  <tr><td class="num">5–8</td><td>Retain 'unknown' labels</td><td>Keep as valid category (not imputed)</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+  <tr><td class="num">9</td><td>Engineer previously_contacted</td><td>Binary flag: pdays ≠ 999</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+  <tr><td class="num">10</td><td>Cap campaign at 99th pct (14)</td><td>Winsorise values > 14</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+  <tr><td class="num">11</td><td>Rename dot columns</td><td>emp.var.rate → emp_var_rate etc.</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+  <tr><td class="num">12–14</td><td>Validate ranges & integrity</td><td>Assert consistency</td><td class="num">41,172</td><td class="num">41,172</td><td class="num">0</td></tr>
+</table>
+
+<div class="info-box">
+  <strong>Decision Rationale:</strong> 'Unknown' values in <code>default</code> (20.87%), <code>education</code> (4.2%),
+  <code>housing/loan</code> (2.4% each), <code>job</code> (0.8%), and <code>marital</code> (0.19%) are retained as
+  valid category labels rather than imputed — preserving information and avoiding noise injection.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     7. EDA (Phase 3)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>7. Exploratory Data Analysis (Phase 3)</h2>
+<p>
+  Ten analytical visualisations were generated to identify conversion drivers across demographics, campaign features,
+  temporal patterns, and macro-economic indicators.
+</p>
+
+<h3>7.1 Target Distribution</h3>
+<div class="fig-full no-break">
+  <img src="reports/phase3/figures/fig01_target_distribution.png" alt="Target Distribution"/>
+  <div class="fig-caption">Fig 01 — Target Distribution: 88.73% No vs 11.27% Yes (7.9:1 imbalance)</div>
+</div>
+
+<h3>7.2 Demographic Conversion Analysis</h3>
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig02_job_conversion.png" alt="Conversion by Job"/>
+    <div class="fig-caption">Fig 02 — Conversion by Job: Student 31.4%, Retired 25.3%</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig03_age_subscription.png" alt="Age vs Subscription"/>
+    <div class="fig-caption">Fig 03 — Age: 66+ converts at 46.9%, 18-25 at 31.4%</div>
+  </div>
+</div>
+
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig04_education_conversion.png" alt="Education Conversion"/>
+    <div class="fig-caption">Fig 04 — Education: University 13.7% vs Basic 10.2%</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig05_marital_finance_flags.png" alt="Marital & Finance"/>
+    <div class="fig-caption">Fig 05 — Single 14.0% vs Married 10.2%</div>
+  </div>
+</div>
+
+<h3>7.3 Campaign & Channel Analysis</h3>
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig06_contact_campaign.png" alt="Contact Method"/>
+    <div class="fig-caption">Fig 06 — Cellular 14.7% vs Telephone 5.2%</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig07_temporal_patterns.png" alt="Temporal Patterns"/>
+    <div class="fig-caption">Fig 07 — March 50.5%, May 6.4% (highest volume)</div>
+  </div>
+</div>
+
+<div class="page-break"></div>
+<h3>7.4 Previous Campaign & Macro-Economic Indicators</h3>
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig08_previous_campaign.png" alt="Previous Campaign"/>
+    <div class="fig-caption">Fig 08 — poutcome=success: 65.1% conversion (5.8x baseline)</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase3/figures/fig09_macro_indicators.png" alt="Macro Indicators"/>
+    <div class="fig-caption">Fig 09 — euribor3m: r = −0.308 with subscription</div>
+  </div>
+</div>
+
+<h3>7.5 Correlation Heatmap</h3>
+<div class="fig-full no-break">
+  <img src="reports/phase3/figures/fig10_correlation_heatmap.png" alt="Correlation Heatmap"/>
+  <div class="fig-caption">Fig 10 — Multicollinearity: emp_var_rate / euribor3m / nr_employed (r &gt; 0.91)</div>
+</div>
+
+<h3>7.6 Key EDA Findings Summary</h3>
+<table>
+  <tr><th>Finding</th><th>Evidence</th><th>Business Implication</th></tr>
+  <tr><td>Students & retirees convert highest</td><td>31.4% and 25.3% respectively</td><td>Priority targeting segments</td></tr>
+  <tr><td>Previous success = strongest predictor</td><td>poutcome=success: 65.1% rate</td><td>Re-target prior converters</td></tr>
+  <tr><td>Cellular outperforms telephone</td><td>14.7% vs 5.2%</td><td>Prefer mobile channel</td></tr>
+  <tr><td>Diminishing returns after 3 contacts</td><td>1 call=13.0%, 3=10.8%, 7+=&lt;6.1%</td><td>Cap at 3 contact attempts</td></tr>
+  <tr><td>May = worst month despite highest volume</td><td>33.4% of calls, only 6.4% conversion</td><td>Reduce mass-calling in May</td></tr>
+  <tr><td>Low interest rate environment boosts conversion</td><td>euribor3m r = −0.308</td><td>Time campaigns to rate cycles</td></tr>
+  <tr><td>Macro variables are highly collinear</td><td>emp_var_rate/euribor3m r = 0.97</td><td>Drop redundant macro features</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     8. SQL ANALYTICS (Phase 4)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>8. SQL Analytics Engine (Phase 4)</h2>
+<p>
+  The project builds an SQLite relational database (<code>data/db/bankinsight.db</code>) from the cleaned CSV
+  and executes 12 SQL query scripts. All SQL results are cross-validated against equivalent Pandas computations.
+</p>
+
+<table>
+  <tr><th>#</th><th>SQL Script</th><th>Purpose</th></tr>
+  <tr><td>01</td><td>01_schema.sql</td><td>Table structure, indices, and constraints</td></tr>
+  <tr><td>02</td><td>02_overview.sql</td><td>Overall volume, subscription count, imbalance ratio</td></tr>
+  <tr><td>03</td><td>03_conversion_by_job.sql</td><td>Conversion rates by job title (12 categories)</td></tr>
+  <tr><td>04</td><td>04_conversion_by_education.sql</td><td>Conversion rates by education level</td></tr>
+  <tr><td>05</td><td>05_conversion_by_marital.sql</td><td>Conversion rates by marital status</td></tr>
+  <tr><td>06</td><td>06_conversion_by_housing_loan.sql</td><td>Joint housing + personal loan analysis</td></tr>
+  <tr><td>07</td><td>07_conversion_by_contact.sql</td><td>Cellular vs telephone channel comparison</td></tr>
+  <tr><td>08</td><td>08_conversion_by_campaign_count.sql</td><td>Contact frequency tiers (1, 2-3, 4-6, 7+)</td></tr>
+  <tr><td>09</td><td>09_conversion_by_poutcome.sql</td><td>Previous campaign outcome breakdown</td></tr>
+  <tr><td>10</td><td>10_duration_contact_stats.sql</td><td>Duration distribution buckets</td></tr>
+  <tr><td>11</td><td>11_customer_segment_analysis.sql</td><td>Multi-dimensional persona segmentation</td></tr>
+  <tr><td>12</td><td>12_temporal_patterns.sql</td><td>Monthly and day-of-week conversion trends</td></tr>
+</table>
+
+<h3>SQL vs Pandas Cross-Validation</h3>
+<table>
+  <tr><th>Check</th><th>SQL Value</th><th>Pandas Value</th><th>Status</th></tr>
+  <tr><td>Total Clients</td><td class="num">41,172</td><td class="num">41,172</td><td>✅ PASS</td></tr>
+  <tr><td>Total Subscribed</td><td class="num">4,639</td><td class="num">4,639</td><td>✅ PASS</td></tr>
+  <tr><td>Subscription Rate (%)</td><td class="num">11.27</td><td class="num">11.27</td><td>✅ PASS</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     9. FEATURE ENGINEERING (Phase 5)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>9. Feature Engineering (Phase 5)</h2>
+
+<h3>9.1 Feature Exclusions</h3>
+<table>
+  <tr><th>Dropped Feature</th><th>Reason</th></tr>
+  <tr><td><code>duration</code></td><td>Target leakage — unknown before call is made</td></tr>
+  <tr><td><code>emp_var_rate</code></td><td>Collinear with euribor3m (r = 0.97)</td></tr>
+  <tr><td><code>nr_employed</code></td><td>Collinear with euribor3m (r = 0.95)</td></tr>
+  <tr><td><code>cons_price_idx</code></td><td>Collinear with emp_var_rate (r = 0.78)</td></tr>
+</table>
+
+<h3>9.2 Engineered Features (16 New)</h3>
+<table>
+  <tr><th>Feature</th><th>Logic</th><th>Reason</th></tr>
+  <tr><td>age_group</td><td>pd.cut(age, [17,25,35,45,55,65,100])</td><td>Non-linear age effect for tree models</td></tr>
+  <tr><td>campaign_group</td><td>1→first, 2-3→optimal, 4-6→diminishing, >6→over_contacted</td><td>Conversion drops after 3 contacts</td></tr>
+  <tr><td>pdays_actual</td><td>pdays if ≠999 else -1</td><td>Strips sentinel value</td></tr>
+  <tr><td>recency_group</td><td>5-level ordinal: no_prior to distant</td><td>Recency effect on conversion</td></tr>
+  <tr><td>repeat_success</td><td>(previously_contacted=1) & (poutcome=success)</td><td>Isolates highest-value segment (65% rate)</td></tr>
+  <tr><td>cellular_first</td><td>(contact=cellular) & (campaign=1)</td><td>Best channel + first contact interaction</td></tr>
+  <tr><td>high_value_segment</td><td>(job∈[student,retired]) & (housing=no)</td><td>High-convert + low-debt segment</td></tr>
+  <tr><td>education_encoded</td><td>Ordinal 0–6 (illiterate to university)</td><td>Monotonic education trend</td></tr>
+  <tr><td>month_num, dow_num</td><td>Calendar integers</td><td>Temporal ordering for linear models</td></tr>
+  <tr><td>log_campaign</td><td>log(1 + campaign)</td><td>Compress right-skewed distribution</td></tr>
+  <tr><td>log_previous</td><td>log(1 + previous_capped)</td><td>Compress zero-inflated distribution</td></tr>
+  <tr><td>low_rate_env</td><td>euribor3m < 2.0 → 1</td><td>Binary threshold: subscription doubles in low-rate periods</td></tr>
+  <tr><td>OHE dummies</td><td>pd.get_dummies(drop_first=True)</td><td>Nominal categoricals for linear models</td></tr>
+</table>
+
+<div class="info-box">
+  <strong>Final Feature Set:</strong> 41 numeric features used for modelling (see <code>models/feature_list.csv</code>).
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     10. ML METHODOLOGY (Phase 6)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>10. Machine Learning Methodology (Phase 6)</h2>
+
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Task</td><td>Supervised Binary Classification</td></tr>
+  <tr><td>Target</td><td><code>y_encoded</code> (0 = no subscription, 1 = yes subscription)</td></tr>
+  <tr><td>Train / Test Split</td><td>80% train (32,937) / 20% test (8,235), stratified</td></tr>
+  <tr><td>Cross-Validation</td><td>Stratified 5-Fold on training set</td></tr>
+  <tr><td>Random Seed</td><td><code>RANDOM_STATE = 42</code></td></tr>
+  <tr><td>Imbalance Handling</td><td><code>class_weight='balanced'</code> (LogReg & RF)</td></tr>
+  <tr><td>Evaluation Metrics</td><td>Precision, Recall, F1-Score, ROC-AUC, PR-AUC</td></tr>
+</table>
+
+<h3>10.1 Models Trained</h3>
+<table>
+  <tr><th>ID</th><th>Model</th><th>Pipeline</th><th>Role</th></tr>
+  <tr><td>M0</td><td>DummyClassifier (stratified)</td><td>—</td><td>Random baseline</td></tr>
+  <tr><td>M1</td><td>Logistic Regression</td><td>StandardScaler → LogReg (balanced, L2)</td><td>Linear benchmark</td></tr>
+  <tr><td>M2</td><td>Random Forest</td><td>RandomForest (100 trees, max_depth=12, balanced)</td><td>Primary non-linear model</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     11. MODEL EVALUATION RESULTS
+     ═══════════════════════════════════════════════════════════ -->
+<h2>11. Model Evaluation Results</h2>
+
+<h3>11.1 Held-Out Test Set (8,235 records)</h3>
+<table>
+  <tr>
+    <th>Model</th><th>Precision</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>PR-AUC</th>
+    <th>TP</th><th>FP</th><th>FN</th><th>TN</th>
+  </tr>
+  <tr>
+    <td>M0 Dummy</td>
+    <td class="num">0.1186</td><td class="num">0.1164</td><td class="num">0.1175</td>
+    <td class="num">0.5032</td><td class="num">0.1134</td>
+    <td class="num">108</td><td class="num">803</td><td class="num">820</td><td class="num">6,504</td>
+  </tr>
+  <tr>
+    <td>M1 LogReg</td>
+    <td class="num">0.2826</td><td class="num"><strong>0.7069</strong></td><td class="num">0.4038</td>
+    <td class="num">0.7820</td><td class="num">0.4129</td>
+    <td class="num">656</td><td class="num">1,665</td><td class="num">272</td><td class="num">5,642</td>
+  </tr>
+  <tr class="highlight-row">
+    <td>M2 RandomForest ★</td>
+    <td class="num"><strong>0.3795</strong></td><td class="num">0.6584</td><td class="num"><strong>0.4815</strong></td>
+    <td class="num"><strong>0.8120</strong></td><td class="num"><strong>0.4778</strong></td>
+    <td class="num">611</td><td class="num">999</td><td class="num">317</td><td class="num">6,308</td>
+  </tr>
+</table>
+
+<h3>11.2 Stratified 5-Fold Cross-Validation (Training Set)</h3>
+<table>
+  <tr><th>Model</th><th>F1 (mean ± std)</th><th>ROC-AUC (mean ± std)</th><th>PR-AUC (mean ± std)</th></tr>
+  <tr><td>M0 Dummy</td><td class="num">0.1132 ± 0.0118</td><td class="num">0.5008 ± 0.0066</td><td class="num">0.1130 ± 0.0014</td></tr>
+  <tr><td>M1 LogReg</td><td class="num">0.3856 ± 0.0099</td><td class="num">0.7740 ± 0.0078</td><td class="num">0.4142 ± 0.0132</td></tr>
+  <tr class="highlight-row"><td>M2 RandomForest ★</td><td class="num">0.4625 ± 0.0142</td><td class="num">0.7950 ± 0.0098</td><td class="num">0.4598 ± 0.0219</td></tr>
+</table>
+
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase6/figures/figA_roc_pr_curves.png" alt="ROC and PR Curves"/>
+    <div class="fig-caption">Fig A — ROC and Precision-Recall Curves</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase6/figures/figB_cv_comparison.png" alt="CV Comparison"/>
+    <div class="fig-caption">Fig B — Cross-Validation Metric Comparison</div>
+  </div>
+</div>
+
+<div class="fig-grid">
+  <div class="fig-card no-break">
+    <img src="reports/phase6/figures/figC_confusion_matrices.png" alt="Confusion Matrices"/>
+    <div class="fig-caption">Fig C — Confusion Matrices (Held-Out Test Set)</div>
+  </div>
+  <div class="fig-card no-break">
+    <img src="reports/phase6/figures/figD_feature_importance.png" alt="Feature Importances"/>
+    <div class="fig-caption">Fig D — Random Forest: Top 20 Feature Importances</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     12. EXPLAINABILITY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>12. Explainability — Feature Importances</h2>
+<p>
+  Feature importances extracted from the primary Random Forest model (<code>models/rf_pipeline.joblib</code>)
+  using Mean Decrease in Impurity (MDI). The top predictors are:
+</p>
+<table>
+  <tr><th>Rank</th><th>Feature</th><th>Importance</th><th>Interpretation</th></tr>
+  <tr><td>1</td><td>euribor3m</td><td class="num">~32.4%</td><td>Key macroeconomic driver — low rates boost deposit demand</td></tr>
+  <tr><td>2</td><td>pdays_actual / poutcome_success</td><td class="num">~18.1%</td><td>Historical campaign responsiveness is strongest predictor</td></tr>
+  <tr><td>3</td><td>cons_conf_idx</td><td class="num">~12.3%</td><td>Consumer financial sentiment indicator</td></tr>
+  <tr><td>4</td><td>age</td><td class="num">~9.5%</td><td>Outlier conversion in 18-25 and 66+ age brackets</td></tr>
+  <tr><td>5</td><td>campaign</td><td class="num">~7.2%</td><td>Diminishing returns beyond 3 contacts</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     13. AI ENGINE (Phase 8)
+     ═══════════════════════════════════════════════════════════ -->
+<h2>13. AI Query Engine & Fallback (Phase 8)</h2>
+
+<h3>13.1 Architecture</h3>
+<ul>
+  <li><strong>phase8_ai_context.py</strong> — Builds a factual context string (~6,800 chars) from validated analytical outputs.</li>
+  <li><strong>phase8_ai_engine.py</strong> — Wraps context + user question in a strict system prompt and calls OpenAI Chat Completions API (<code>gpt-4o-mini</code>).</li>
+  <li><strong>Rule-Based Fallback</strong> — When no API key is set or the network is offline, the engine seamlessly switches to a pre-built rule-based response engine with 8 topic categories.</li>
+</ul>
+
+<h3>13.2 Zero-Hallucination Rules</h3>
+<ol>
+  <li>Only cite numbers that appear verbatim in the analytical context.</li>
+  <li>If the context doesn't contain an answer, say so explicitly.</li>
+  <li>Clearly label FACT (from context) vs INTERPRETATION (reasoning).</li>
+  <li>Never reference features that don't exist in the dataset (e.g., 'balance').</li>
+</ol>
+
+<h3>13.3 Configuration</h3>
+<p>All AI settings are loaded from <code>.env</code> (never hardcoded):</p>
+<pre><code>OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-4o-mini
+AI_MAX_TOKENS=1200
+AI_TEMPERATURE=0.3
+AI_TIMEOUT_SEC=30
+AI_MAX_RETRIES=2</code></pre>
+
+<!-- ═══════════════════════════════════════════════════════════
+     14. DASHBOARD (Phase 7 & 9)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>14. Interactive Dashboard (Phase 7 & 9)</h2>
+<p>
+  An executive web dashboard (<code>dashboard/index.html</code>) driven by <code>dashboard/dashboard_data.json</code>
+  and served by <code>src/phase8_ai_server.py</code> on port 8050.
+</p>
+
+<h3>Dashboard Sections</h3>
+<ul>
+  <li><strong>Executive Overview</strong> — KPI summary ribbon (total clients, subscriptions, conversion rate, imbalance ratio, avg call duration, avg campaign contacts).</li>
+  <li><strong>Customer Analytics</strong> — Interactive ECharts showing conversion by job, education, marital status, and housing/loan.</li>
+  <li><strong>Campaign Analytics</strong> — Channel comparison, contact frequency tiers, previous outcome impact, and temporal patterns.</li>
+  <li><strong>Customer Segments</strong> — Multi-dimensional persona breakdown.</li>
+  <li><strong>Model Performance</strong> — ML benchmark comparison, ROC/PR curves, confusion matrices.</li>
+  <li><strong>AI Insights</strong> — Auto-generated data-driven insights with evidence citations.</li>
+  <li><strong>AI Chat Assistant</strong> — Live conversational panel connected to <code>/api/ask</code> endpoint.</li>
+</ul>
+
+<h3>Access</h3>
+<pre><code>python src/phase8_ai_server.py --port 8050
+# Dashboard opens at: http://localhost:8050</code></pre>
+
+<!-- ═══════════════════════════════════════════════════════════
+     15. ARCHITECTURE
+     ═══════════════════════════════════════════════════════════ -->
+<h2>15. System Architecture</h2>
+<div class="arch-box">
+                        ┌───────────────────────────────┐
+                        │      bank_marketing.csv       │
+                        └──────────────┬────────────────┘
+                                       │
+                                       ▼
+                        ┌───────────────────────────────┐
+                        │   Phase 1: Data Profiling     │
+                        │   Phase 2: Data Cleaning      │
+                        └──────────────┬────────────────┘
+                                       │
+              ┌────────────────────────┴────────────────────────┐
+              ▼                                                 ▼
+┌───────────────────────────────┐         ┌───────────────────────────────┐
+│  Phase 3: EDA + Visualisation │         │  Phase 5: Feature Engineering │
+│  Phase 4: SQLite + SQL Engine │         │  (Target Leakage Excluded)    │
+└───────────────┬───────────────┘         └───────────────┬───────────────┘
+                │                                         │
+                ▼                                         ▼
+┌───────────────────────────────┐         ┌───────────────────────────────┐
+│  Phase 7: Dashboard Data JSON │         │  Phase 6: ML Pipeline         │
+│  dashboard/dashboard_data.json│         │  models/rf_pipeline.joblib    │
+└───────────────┬───────────────┘         └───────────────┬───────────────┘
+                │                                         │
+                └────────────────────┬────────────────────┘
+                                     │
+                                     ▼
+                        ┌───────────────────────────────┐
+                        │  Phase 8: AI Engine + Server   │
+                        │  Context → LLM / Fallback     │
+                        └──────────────┬────────────────┘
+                                       │
+                                       ▼
+                        ┌───────────────────────────────┐
+                        │  Dashboard UI (Port 8050)     │
+                        │  + AI Chat Assistant          │
+                        └───────────────────────────────┘
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     16. TECH STACK
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>16. Technology Stack</h2>
+<table>
+  <tr><th>Layer</th><th>Technology</th><th>Version / Notes</th></tr>
+  <tr><td>Core Language</td><td>Python</td><td>3.14+</td></tr>
+  <tr><td>Data Manipulation</td><td>Pandas, NumPy</td><td>DataFrames, vectorised operations</td></tr>
+  <tr><td>Database & SQL</td><td>SQLite3</td><td>12 analytical query scripts</td></tr>
+  <tr><td>Machine Learning</td><td>Scikit-learn</td><td>Pipelines, CV, metrics</td></tr>
+  <tr><td>Model Persistence</td><td>Joblib</td><td>.joblib serialisation</td></tr>
+  <tr><td>Visualisation (EDA)</td><td>Matplotlib</td><td>10 EDA + 4 ML figures</td></tr>
+  <tr><td>Visualisation (Dashboard)</td><td>Apache ECharts</td><td>v5.4.3 (CDN)</td></tr>
+  <tr><td>Testing</td><td>Pytest</td><td>v9.1 — 33 automated tests</td></tr>
+  <tr><td>AI / LLM Layer</td><td>OpenAI API</td><td>gpt-4o-mini + fallback engine</td></tr>
+  <tr><td>Config Management</td><td>python-dotenv</td><td>.env file loading</td></tr>
+  <tr><td>Web Server</td><td>Python http.server</td><td>Built-in HTTP server</td></tr>
+  <tr><td>Frontend</td><td>HTML5, CSS3, JavaScript</td><td>Single-page application</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     17. PROJECT STRUCTURE
+     ═══════════════════════════════════════════════════════════ -->
+<h2>17. Project Structure</h2>
+<pre><code>BankInsight AI/
+├── .env.example                  # Environment variable template
+├── .gitignore                    # Git ignore rules
+├── README.md                     # Project documentation
+├── bank_marketing.csv            # Raw dataset (41,188 rows)
+├── dashboard/
+│   ├── dashboard_data.json       # Pre-built analytics payload
+│   └── index.html                # Executive dashboard SPA
+├── data/
+│   ├── db/bankinsight.db         # SQLite analytics database
+│   └── processed/
+│       ├── bank_marketing_clean.csv     # Cleaned dataset
+│       └── bank_marketing_features.csv  # Feature-engineered dataset
+├── models/
+│   ├── feature_list.csv          # 41 model features
+│   ├── lr_pipeline.joblib        # Logistic Regression pipeline
+│   └── rf_pipeline.joblib        # Random Forest pipeline (primary)
+├── reports/
+│   ├── phase1/                   # Profiling outputs (5 files)
+│   ├── phase2/                   # Cleaning log + report
+│   ├── phase3/                   # EDA report + 10 figures
+│   ├── phase4/                   # SQL results (11 CSVs + report)
+│   ├── phase5/                   # Feature dictionary + report
+│   ├── phase6/                   # ML evaluation + 4 figures
+│   ├── phase8/                   # AI test results + architecture
+│   └── phase10/                  # Test audit report + results
+├── src/
+│   ├── sql/                      # 12 SQL analytics scripts
+│   ├── phase1_profiling.py       # Data understanding
+│   ├── phase2_cleaning.py        # Data cleaning pipeline
+│   ├── phase3_eda.py             # Exploratory data analysis
+│   ├── phase4_sql_analytics.py   # SQL engine
+│   ├── phase5_feature_engineering.py  # Feature pipeline
+│   ├── phase6_modelling.py       # ML training & evaluation
+│   ├── phase7_dashboard_data.py  # Dashboard JSON builder
+│   ├── phase8_ai_context.py      # AI context generator
+│   ├── phase8_ai_engine.py       # AI query engine + fallback
+│   ├── phase8_ai_server.py       # HTTP server (dashboard + AI API)
+│   └── phase8_test.py            # AI test harness
+└── tests/                        # 7 pytest test modules (33 tests)
+    ├── test_data_pipeline.py
+    ├── test_sql_analytics.py
+    ├── test_ml_pipeline.py
+    ├── test_ai_integration.py
+    ├── test_dashboard.py
+    ├── test_edge_cases.py
+    └── test_code_quality.py</code></pre>
+
+<!-- ═══════════════════════════════════════════════════════════
+     18. INSTALLATION & RUN
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>18. Installation & Run Instructions</h2>
+
+<h3>18.1 Install Dependencies</h3>
+<pre><code>pip install pandas numpy scikit-learn joblib matplotlib pytest python-dotenv openai</code></pre>
+
+<h3>18.2 Run Pipeline (Sequential)</h3>
+<pre><code># Phase 1: Data Profiling
+python src/phase1_profiling.py
+
+# Phase 2: Data Cleaning
+python src/phase2_cleaning.py
+
+# Phase 3: Exploratory Data Analysis
+python src/phase3_eda.py
+
+# Phase 4: SQL Database & Analytics
+python src/phase4_sql_analytics.py
+
+# Phase 5: Feature Engineering
+python src/phase5_feature_engineering.py
+
+# Phase 6: ML Model Training & Evaluation
+python src/phase6_modelling.py
+
+# Phase 7: Build Dashboard Data
+python src/phase7_dashboard_data.py
+
+# Phase 8: Test AI Layer
+python src/phase8_test.py
+
+# Launch Dashboard + AI Server
+python src/phase8_ai_server.py --port 8050</code></pre>
+
+<h3>18.3 Environment Variables (Optional — for Live AI)</h3>
+<pre><code># Create .env in project root:
+OPENAI_API_KEY=your_openai_api_key_here</code></pre>
+<p><em>Note: If no API key is provided, the platform automatically uses the rule-based fallback engine.</em></p>
+
+<!-- ═══════════════════════════════════════════════════════════
+     19. TESTING (Phase 10)
+     ═══════════════════════════════════════════════════════════ -->
+<h2>19. Testing & Validation (Phase 10)</h2>
+
+<h3>Run Tests</h3>
+<pre><code>python -m pytest -v --tb=short</code></pre>
+
+<h3>Actual Test Results</h3>
+<table>
+  <tr><th>Test Module</th><th>Tests</th><th>Status</th><th>Coverage</th></tr>
+  <tr><td>test_data_pipeline.py</td><td class="num">6</td><td>✅ PASSED</td><td>Loading, profiling, cleaning, features</td></tr>
+  <tr><td>test_sql_analytics.py</td><td class="num">4</td><td>✅ PASSED</td><td>DB schema, queries, Pandas validation</td></tr>
+  <tr><td>test_ml_pipeline.py</td><td class="num">4</td><td>✅ PASSED</td><td>Models, predictions, metrics, importances</td></tr>
+  <tr><td>test_ai_integration.py</td><td class="num">4</td><td>✅ PASSED</td><td>Context, engine, fallback, availability</td></tr>
+  <tr><td>test_dashboard.py</td><td class="num">4</td><td>✅ PASSED</td><td>JSON structure, KPIs, HTML content</td></tr>
+  <tr><td>test_edge_cases.py</td><td class="num">7</td><td>✅ PASSED</td><td>NaNs, errors, empty results, offline AI</td></tr>
+  <tr><td>test_code_quality.py</td><td class="num">4</td><td>✅ PASSED</td><td>Paths, secrets, imports, reproducibility</td></tr>
+  <tr class="highlight-row"><td><strong>TOTAL</strong></td><td class="num"><strong>33</strong></td><td><strong>✅ ALL PASSED</strong></td><td></td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════
+     20. LIMITATIONS
+     ═══════════════════════════════════════════════════════════ -->
+<h2>20. Limitations</h2>
+<ol>
+  <li><strong>Duration Exclusion</strong>: <code>duration</code> is excluded to prevent target leakage, which limits maximum attainable F1-score to approximately 0.48 (without it, models can easily exceed 0.90 — but this is a false result).</li>
+  <li><strong>Class Imbalance</strong>: The severe 7.9:1 imbalance limits precision at the default 0.5 decision threshold. Cost-sensitive threshold tuning could improve practical deployment performance.</li>
+  <li><strong>No Financial Balance</strong>: The UCI Bank Marketing v2 dataset does not include client bank account balances, limiting client financial profile depth.</li>
+  <li><strong>Historical Data</strong>: The dataset covers 2008–2013 (post-financial-crisis period). Model performance may differ on contemporary data with different macro-economic conditions.</li>
+</ol>
+
+<!-- ═══════════════════════════════════════════════════════════
+     21. FUTURE SCOPE
+     ═══════════════════════════════════════════════════════════ -->
+<h2>21. Future Scope</h2>
+<ol>
+  <li><strong>Cost-Sensitive Threshold Optimisation</strong> — Optimise classification decision threshold based on specific call-centre costs vs term deposit revenue.</li>
+  <li><strong>Gradient Boosting Models</strong> — Integrate LightGBM and XGBoost for incremental accuracy gains.</li>
+  <li><strong>SHAP Values</strong> — Add SHAP (SHapley Additive exPlanations) for instance-level explainability.</li>
+  <li><strong>CRM API Integrations</strong> — Build webhooks for direct lead push to CRM systems (Salesforce, HubSpot).</li>
+  <li><strong>Real-Time Scoring API</strong> — Deploy model as a REST endpoint for live lead-scoring in production.</li>
+</ol>
+
+<!-- ═══════════════════════════════════════════════════════════
+     22. ATTRIBUTION
+     ═══════════════════════════════════════════════════════════ -->
+<h2>22. Dataset Attribution & References</h2>
+<p>
+  S. Moro, P. Cortez and P. Rita. <em>A Data-Driven Approach to Predict the Success of Bank Telemarketing.</em>
+  Decision Support Systems, Elsevier, 62:22-31, June 2014.<br/>
+  Available via the <a href="https://archive.ics.uci.edu/ml/datasets/Bank+Marketing" style="color:#2563eb;">
+  UCI Machine Learning Repository</a>.
+</p>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="doc-footer">
+  BankInsight AI — Project Report | Maharsh Patel | IBM Skills Build Internship | September 2026<br/>
+  GitHub: <a href="https://github.com/maharsh-patel/bankinsight-ai-analytics" style="color:#2563eb;">
+  github.com/maharsh-patel/bankinsight-ai-analytics</a>
+</div>
+
+</body>
+</html>
